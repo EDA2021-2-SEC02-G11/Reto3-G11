@@ -23,36 +23,109 @@
 import config as cf
 import sys
 import controller
+import time
 from DISClib.ADT import list as lt
 assert cf
 
 
-"""
-La vista se encarga de la interacción con el usuario
-Presenta el menu de opciones y por cada seleccion
-se hace la solicitud al controlador para ejecutar la
-operación solicitada
-"""
+def print_menu():
+    """
+    Imprime las opciones del menú.
+    """
+    print("\nBienvenido al menú.\n")
+    print("0. Cargar datos y generar el catálogo.")
+    print("Req. 1. Contar los avistamientos en una ciudad.")
+    print("Req. 2. Contar los avistamientos por duración.")
+    print("Req. 3. Contar avistamientos por hora/minutos del día.")
+    print("Req. 4. Contar los avistamientos en un rango de fechas.")
+    print("Req. 5. Contar los avistamientos de una zona geográfica.")
+    print("Req. 6 (B). Visualizar los avistamientos de una zona geográfica.")
+    print("7. Detener la ejecución del programa.")
 
-def printMenu():
-    print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+
+def print_load_data():
+    print("Cargando información de los archivos...")
+    start_time = time.process_time()
+    catalog = init_catalog()
+    load_data(catalog)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
+    return catalog
+
+
+def init_catalog():
+    """
+    Inicializa el catalogo de libros.
+    """
+    return controller.init_catalog()
+
+
+def load_data(catalog):
+    """
+    Carga los datos al catálogo.
+    """
+    return controller.load_data(catalog)
+
 
 catalog = None
 
+
+def print_req_1():
+    print('Este requerimiento aún no ha sido implementado.')
+
+
+def print_req_2():
+    print('Este requerimiento aún no ha sido implementado.')
+
+
+def print_req_3():
+    print('Este requerimiento aún no ha sido implementado.')
+
+
+def print_req_4():
+    print('Este requerimiento aún no ha sido implementado.')
+
+
+def print_req_5():
+    print('Este requerimiento aún no ha sido implementado.')
+
+
+def print_req_6():
+    print('Este requerimiento aún no ha sido implementado.')
+
+
 """
-Menu principal
+Menú principal
 """
 while True:
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
-
-    elif int(inputs[0]) == 2:
-        pass
-
+    error = '\nError: Por favor ingrese un número entero entre 0 y 7.\n'
+    error_cargar= '\nError: Se deben cargar los datos antes de usar los requisitos.\n'
+    print_menu()
+    try:
+        inputs = int(input('Seleccione una opción para continuar: \n'))
+    except:
+        print(error)
+        continue
+    if inputs == 0:
+        catalog = load_data()
+    elif inputs > 0 and inputs < 9:
+        if type(catalog) != dict:
+            print(error_cargar)
+        elif inputs == 1:
+            print_req_1()
+        elif inputs == 2:
+            print_req_2()
+        elif inputs == 3:
+            print_req_3()
+        elif inputs == 4:
+            print_req_4()
+        elif inputs == 5:
+            print_req_5()
+        elif inputs == 6:
+            print_req_6()
+    elif inputs > 7:
+        print(error)
     else:
         sys.exit(0)
 sys.exit(0)

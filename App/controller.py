@@ -20,14 +20,13 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
 import config as cf
 import model
 import csv
 
 
-"""
-El controlador se encarga de mediar entre la vista y el modelo.
-"""
+
 
 # Inicialización del Catálogo de libros
 
