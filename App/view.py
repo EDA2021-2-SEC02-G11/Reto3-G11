@@ -43,14 +43,15 @@ def print_menu():
 
 
 def print_load_data():
-    print("Cargando información de los archivos...")
-    start_time = time.process_time()
-    catalog = init_catalog()
-    load_data(catalog)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
-    return catalog
+    # print("Cargando información de los archivos...")
+    # start_time = time.process_time()
+    # catalog = init_catalog()
+    # load_data(catalog)
+    # stop_time = time.process_time()
+    # elapsed_time_mseg = (stop_time - start_time)*1000
+    # print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
+    # return catalog
+    pass
 
 
 def init_catalog():
@@ -71,7 +72,15 @@ catalog = None
 
 
 def print_req_1():
-    print('Este requerimiento aún no ha sido implementado.')
+    city = input('Ingrese el nombre de la ciudad a consultar: ')
+    print('----------------------Requirement 1: Inputs----------------------')
+    print('UFO sightings in the city of '+city+'.\n')
+    print('----------------------Requirement 1: Answer----------------------')
+    print('The city of '+city+' presents a total of '+str(7)+' UFO sightings.')
+    print("""Information regarding the first and last three UFO sightings in
+             the city of """.replace('\n            ', '')+city +
+          ' in chronological order:')
+    #  Prettytable.
 
 
 def print_req_2():
@@ -100,7 +109,7 @@ Menú principal
 while True:
     error = '\nError: Por favor ingrese un número entero entre 0 y 7.\n'
     error_cargar = """\nError: Se deben cargar los datos antes de usar los
-                      requisitos.\n""".replace('\n                      ', ' ')
+                      requisitos.\n""".replace('\n                     ', '')
     print_menu()
     try:
         inputs = int(input('Seleccione una opción para continuar: \n'))
@@ -108,7 +117,7 @@ while True:
         print(error)
         continue
     if inputs == 0:
-        catalog = load_data()
+        catalog = print_load_data()
     elif inputs > 0 and inputs < 7:
         if type(catalog) != dict:
             print(error_cargar)
