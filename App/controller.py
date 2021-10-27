@@ -26,8 +26,6 @@ import model
 import csv
 
 
-
-
 # Inicialización del Catálogo de libros
 
 # Funciones para la carga de datos

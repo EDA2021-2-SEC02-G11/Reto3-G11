@@ -24,7 +24,6 @@ import config as cf
 import sys
 import controller
 import time
-from DISClib.ADT import list as lt
 assert cf
 
 
@@ -100,7 +99,8 @@ Menú principal
 """
 while True:
     error = '\nError: Por favor ingrese un número entero entre 0 y 7.\n'
-    error_cargar= '\nError: Se deben cargar los datos antes de usar los requisitos.\n'
+    error_cargar = """\nError: Se deben cargar los datos antes de usar los
+                      requisitos.\n""".replace('\n                      ', ' ')
     print_menu()
     try:
         inputs = int(input('Seleccione una opción para continuar: \n'))
@@ -109,7 +109,7 @@ while True:
         continue
     if inputs == 0:
         catalog = load_data()
-    elif inputs > 0 and inputs < 9:
+    elif inputs > 0 and inputs < 7:
         if type(catalog) != dict:
             print(error_cargar)
         elif inputs == 1:
