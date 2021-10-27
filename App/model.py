@@ -38,8 +38,10 @@ def new_catalog():
     Crea el catálogo.
     """
     catalog = {}
-    catalog['cities'] = om.newMap(omaptype='RBT',
-                                  comparefunction=compare_keys)
+
+    catalog['req1'] = om.newMap(omaptype='RBT',
+                                comparefunction=compare_keys)
+
     return catalog
 
 
@@ -49,19 +51,16 @@ def new_catalog():
 
 
 def add_sighting(catalog, sighting):
-    # lt.addLast(catalog['crimes'], crime)
-    update(catalog['cities'], sighting)
+    create_tree_req1(catalog['cities'], sighting)  # Requirement 1
     return catalog
 
 
-def update(map, sighting):
+def create_tree_req1(map, sighting):
     """
-    Se toma la fecha del crimen y se busca si ya existe en el arbol
-    dicha fecha.  Si es asi, se adiciona a su lista de crimenes
-    y se actualiza el indice de tipos de crimenes.
-
-    Si no se encuentra creado un nodo para esa fecha en el arbol
-    se crea y se actualiza el indice de tipos de crimenes
+    Crea el árbol del requisito 1.
+    El árbol que tiene como llaves ciudades y como valores árboles.
+    Esos árboles tienen como llaves fechas (con hora) y como valores arreglos.
+    Cada arreglo contiene los avistamientos en una fecha y ciudad determinadas.
     """
     city = sighting['city']
     date_time = datetime.datetime.strptime(sighting['datetime'],
@@ -70,7 +69,7 @@ def update(map, sighting):
     if entry is None:
         dates = om.newMap(omaptype='RBT',
                           comparefunction=compare_keys)
-        sightings_list = lt.newList('ARRAY_LIST')
+        sightings_list = lt.newList('ARRAY_LIST', key='city')
         lt.addLast(sightings_list, sighting)
         om.put(dates, date_time, sightings_list)
         om.put(map, city, dates)
@@ -90,10 +89,10 @@ def update(map, sighting):
     return map
 
 
-# Requirements
-
-
 def requirement1():
+    """
+    Arma la respuesta del requisito 1 usando el árbol del requisito 1.
+    """
     pass
 
 

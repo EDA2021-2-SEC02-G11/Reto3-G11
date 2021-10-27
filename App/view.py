@@ -70,7 +70,7 @@ def load_data(catalog):
 catalog = None
 
 
-def print_req_1():
+def print_req1():
     city = input('Ingrese el nombre de la ciudad a consultar: ')
     print('----------------------Requirement 1: Inputs----------------------')
     print('UFO sightings in the city of '+city+'.\n')
@@ -82,23 +82,23 @@ def print_req_1():
     #  Prettytable.
 
 
-def print_req_2():
+def print_req2():
     print('Este requerimiento aún no ha sido implementado.')
 
 
-def print_req_3():
+def print_req3():
     print('Este requerimiento aún no ha sido implementado.')
 
 
-def print_req_4():
+def print_req4():
     print('Este requerimiento aún no ha sido implementado.')
 
 
-def print_req_5():
+def print_req5():
     print('Este requerimiento aún no ha sido implementado.')
 
 
-def print_req_6():
+def print_req6():
     print('Este requerimiento aún no ha sido implementado.')
 
 
@@ -121,17 +121,17 @@ while True:
         if type(catalog) != dict:
             print(error_cargar)
         elif inputs == 1:
-            print_req_1()
+            print_req1()
         elif inputs == 2:
-            print_req_2()
+            print_req2()
         elif inputs == 3:
-            print_req_3()
+            print_req3()
         elif inputs == 4:
-            print_req_4()
+            print_req4()
         elif inputs == 5:
-            print_req_5()
+            print_req5()
         elif inputs == 6:
-            print_req_6()
+            print_req6()
     elif inputs > 7:
         print(error)
     else:
