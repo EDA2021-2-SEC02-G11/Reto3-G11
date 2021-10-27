@@ -43,15 +43,14 @@ def print_menu():
 
 
 def print_load_data():
-    # print("Cargando información de los archivos...")
-    # start_time = time.process_time()
-    # catalog = init_catalog()
-    # load_data(catalog)
-    # stop_time = time.process_time()
-    # elapsed_time_mseg = (stop_time - start_time)*1000
-    # print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
-    # return catalog
-    pass
+    print("Cargando información de los archivos...")
+    start_time = time.process_time()
+    catalog = init_catalog()
+    load_data(catalog)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
+    return catalog
 
 
 def init_catalog():

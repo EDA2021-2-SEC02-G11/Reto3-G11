@@ -26,10 +26,37 @@ import model
 import csv
 
 
-# Inicialización del Catálogo de libros
+def init_catalog():
+    catalog = model.new_catalog()
+    return catalog
 
-# Funciones para la carga de datos
 
-# Funciones de ordenamiento
+def load_data(catalog):
+    file = cf.data_dir + 'UFOS/UFOS-utf8-small.csv'
+    input_file = csv.DictReader(open(file, encoding='utf-8'))
+    for sighting in input_file:
+        model.add_sighting(catalog, sighting)
 
-# Funciones de consulta sobre el catálogo
+
+def requirement1():
+    return model.requirement1()
+
+
+def requirement2():
+    return model.requirement2()
+
+
+def requirement3():
+    return model.requirement3()
+
+
+def requirement4():
+    return model.requirement4()
+
+
+def requirement5():
+    return model.requirement5()
+
+
+def requirement6():
+    return model.requirement6()
