@@ -51,49 +51,87 @@ def new_catalog():
 
 
 def add_sighting(catalog, sighting):
-    create_tree_req1(catalog['cities'], sighting)  # Requirement 1
+    create_tree_req1(catalog['req1'], sighting)  # Requirement 1
     return catalog
+
+
+# Lab 8
+
+
+def opcion3(catalog):
+    height = om.height(catalog['req1'])
+    size = om.size(catalog['req1'])
+    return height, size
+
+
+# Requirement 1
 
 
 def create_tree_req1(map, sighting):
     """
     Crea el árbol del requisito 1.
-    El árbol que tiene como llaves ciudades y como valores árboles.
-    Esos árboles tienen como llaves fechas (con hora) y como valores arreglos.
-    Cada arreglo contiene los avistamientos en una fecha y ciudad determinadas.
+    El árbol que tiene como llaves ciudades y como valores diccionarios.
+    En el diccionario hay dos parejas llave valor: una para el total de
+    avistamientos en la ciudad y otra que es un árbol. El árbol tiene como
+    llaves fechas (con hora) y como valores arreglos. Cada arreglo contiene los
+    avistamientos en una fecha y ciudad determinadas.
     """
     city = sighting['city']
     date_time = datetime.datetime.strptime(sighting['datetime'],
                                            '%Y-%m-%d %H:%M:%S')
     entry = om.get(map, city)
     if entry is None:
-        dates = om.newMap(omaptype='RBT',
-                          comparefunction=compare_keys)
+        structure = {'total': 0, 'dates': om.newMap(omaptype='RBT',
+                     comparefunction=compare_keys)}
         sightings_list = lt.newList('ARRAY_LIST', key='city')
         lt.addLast(sightings_list, sighting)
-        om.put(dates, date_time, sightings_list)
-        om.put(map, city, dates)
+        structure['total'] += 1
+        om.put(structure['dates'], date_time, sightings_list)
+        om.put(map, city, structure)
     else:
-        dates = me.getValue(entry)
-        sightings_entry = om.get(dates, date_time)
+        structure = me.getValue(entry)
+        sightings_entry = om.get(structure['dates'], date_time)
         if sightings_entry is None:
             sightings_list = lt.newList('ARRAY_LIST')
             lt.addLast(sightings_list, sighting)
-            om.put(dates, date_time, sightings_list)
-            om.put(map, city, dates)
+            structure['total'] += 1
+            om.put(structure['dates'], date_time, sightings_list)
+            om.put(map, city, structure)
         else:
             sightings_list = me.getValue(sightings_entry)
             lt.addLast(sightings_list, sighting)
-            om.put(dates, date_time, sightings_list)
-            om.put(map, city, dates)
+            structure['total'] += 1
+            om.put(structure['dates'], date_time, sightings_list)
+            om.put(map, city, structure)
     return map
 
 
-def requirement1():
+def requirement1(catalog, city):
     """
     Arma la respuesta del requisito 1 usando el árbol del requisito 1.
     """
-    pass
+    sample = lt.newList('ARRAY_LIST')
+    entry = om.get(catalog['req1'], city)
+    structure = me.getValue(entry)
+    total = structure['total']
+    dates = structure['dates']
+    min_ = om.minKey(dates)
+    second = om.ceiling(dates, min_)
+    third = om.ceiling(dates, second)
+    for i in [min, second, third]:
+        if lt.size(sample) >= 3:
+            break
+        entry_min = om.get(dates, i)
+        sightings_min = me.getValue(entry_min)
+        for sighting in lt.iterator(sightings_min):
+                if lt.size(sample) < 3:
+                    lt.addLast(sample, sighting)
+                    if lt.size(sample) >= 3:
+                        break
+                else:
+                    break      
+    max_ = om.maxKey(dates)
+    return total, sample 
 
 
 def requirement2():

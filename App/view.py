@@ -34,11 +34,12 @@ def print_menu():
     print("\nBienvenido al menú.\n")
     print("0. Cargar datos y generar el catálogo.")
     print("Req. 1. Contar los avistamientos en una ciudad.")
-    print("Req. 2. Contar los avistamientos por duración.")
-    print("Req. 3. Contar avistamientos por hora/minutos del día.")
-    print("Req. 4. Contar los avistamientos en un rango de fechas.")
-    print("Req. 5. Contar los avistamientos de una zona geográfica.")
-    print("Req. 6 (B). Visualizar los avistamientos de una zona geográfica.")
+    print("3. Opción 3: altura y número de elementos del árbol")
+    # print("Req. 2. Contar los avistamientos por duración.")
+    # print("Req. 3. Contar avistamientos por hora/minutos del día.")
+    # print("Req. 4. Contar los avistamientos en un rango de fechas.")
+    # print("Req. 5. Contar los avistamientos de una zona geográfica.")
+    # print("Req. 6 (B). Visualizar los avistamientos de una zona geográfica.")
     print("7. Detener la ejecución del programa.")
 
 
@@ -70,16 +71,29 @@ def load_data(catalog):
 catalog = None
 
 
-def print_req1():
+def print_req1(catalog):
     city = input('Ingrese el nombre de la ciudad a consultar: ')
+    total, list_ = controller.requirement1(catalog, city)
+    city = city.title()
     print('----------------------Requirement 1: Inputs----------------------')
     print('UFO sightings in the city of '+city+'.\n')
     print('----------------------Requirement 1: Answer----------------------')
-    print('The city of '+city+' presents a total of '+str(7)+' UFO sightings.')
+    print('The city of '+city+' presents a total of '+str(total) +
+          ' UFO sightings.')
     print("""Information regarding the first and last three UFO sightings in
              the city of """.replace('\n            ', '')+city +
           ' in chronological order:')
     #  Prettytable.
+
+
+def opcion3(catalog):
+    height, size = controller.opcion3(catalog)
+    print('----------------------Opción 3 Laboratorio 8----------------------')
+    print('Se despliegan los datos característicos (altura y número de elem' +
+          'entos) del árbol RBT de ciudades usado para el requerimiento 1, ' +
+          'como se pide en el laboratorio 8.\n')
+    print('La altura del árbol RBT de ciudades es: '+str(height))
+    print('El número de elementos en el árbol RBT de ciudades es: '+str(size))
 
 
 def print_req2():
@@ -121,11 +135,11 @@ while True:
         if type(catalog) != dict:
             print(error_cargar)
         elif inputs == 1:
-            print_req1()
+            print_req1(catalog)
         elif inputs == 2:
             print_req2()
         elif inputs == 3:
-            print_req3()
+            opcion3(catalog)
         elif inputs == 4:
             print_req4()
         elif inputs == 5:
