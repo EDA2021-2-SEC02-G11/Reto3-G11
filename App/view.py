@@ -86,21 +86,20 @@ def print_req1(catalog):
     print("""Information regarding the first and last three UFO sightings in
              the city of """.replace('\n            ', '')+city +
           ' in chronological order:')
-    answ = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
+    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
     for i in [1, 2, 3, -2, -1, 0]:
-        answ.add_row([lt.getElement(li, i)['datetime'],
+        table.add_row([lt.getElement(li, i)['datetime'],
                       lt.getElement(li, i)['city'],
                       lt.getElement(li, i)['country'],
                       lt.getElement(li, i)['duration (seconds)'],
                       lt.getElement(li, i)['shape']])
-    # answ._max_width = {'Nombre':40}
-    print(answ)
+    print(table)
 
 
 def opcion3(catalog):
     height, size = controller.opcion3(catalog)
-    print('----------------------Opción 3 Laboratorio 8----------------------')
+    print('\n--------------------Opción 3 Laboratorio 8--------------------\n')
     print('Se despliegan los datos característicos (altura y número de elem' +
           'entos) del árbol RBT de ciudades usado para el requerimiento 1, ' +
           'como se pide en el laboratorio 8.\n')
