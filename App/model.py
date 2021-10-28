@@ -115,22 +115,7 @@ def requirement1(catalog, city):
     structure = me.getValue(entry)
     total = structure['total']
     dates = structure['dates']
-    min_ = om.minKey(dates)
-    second = om.ceiling(dates, min_)
-    third = om.ceiling(dates, second)
-    for i in [min, second, third]:
-        if lt.size(sample) >= 3:
-            break
-        entry_min = om.get(dates, i)
-        sightings_min = me.getValue(entry_min)
-        for sighting in lt.iterator(sightings_min):
-                if lt.size(sample) < 3:
-                    lt.addLast(sample, sighting)
-                    if lt.size(sample) >= 3:
-                        break
-                else:
-                    break      
-    max_ = om.maxKey(dates)
+
     return total, sample 
 
 
