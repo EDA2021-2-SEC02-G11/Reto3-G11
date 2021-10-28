@@ -29,6 +29,7 @@ import config as cf
 import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
+from DISClib.Algorithms.Sorting import mergesort as mer
 from DISClib.DataStructures import mapentry as me
 assert cf
 
@@ -67,56 +68,42 @@ def opcion3(catalog):
 # Requirement 1
 
 
-def create_tree_req1(map, sighting):
+def create_tree_req1(tree, sighting):
     """
     Crea el árbol del requisito 1.
-    El árbol que tiene como llaves ciudades y como valores diccionarios.
-    En el diccionario hay dos parejas llave valor: una para el total de
-    avistamientos en la ciudad y otra que es un árbol. El árbol tiene como
-    llaves fechas (con hora) y como valores arreglos. Cada arreglo contiene los
-    avistamientos en una fecha y ciudad determinadas.
+    El árbol tiene como llaves ciudades y como valores arreglos con los
+    avistamientos en por ciudad.
     """
     city = sighting['city']
-    date_time = datetime.datetime.strptime(sighting['datetime'],
-                                           '%Y-%m-%d %H:%M:%S')
-    entry = om.get(map, city)
+    entry = om.get(tree, city)
     if entry is None:
-        structure = {'total': 0, 'dates': om.newMap(omaptype='RBT',
-                     comparefunction=compare_keys)}
-        sightings_list = lt.newList('ARRAY_LIST', key='city')
-        lt.addLast(sightings_list, sighting)
-        structure['total'] += 1
-        om.put(structure['dates'], date_time, sightings_list)
-        om.put(map, city, structure)
+        sightings_list = lt.newList('ARRAY_LIST')
     else:
-        structure = me.getValue(entry)
-        sightings_entry = om.get(structure['dates'], date_time)
-        if sightings_entry is None:
-            sightings_list = lt.newList('ARRAY_LIST')
-            lt.addLast(sightings_list, sighting)
-            structure['total'] += 1
-            om.put(structure['dates'], date_time, sightings_list)
-            om.put(map, city, structure)
-        else:
-            sightings_list = me.getValue(sightings_entry)
-            lt.addLast(sightings_list, sighting)
-            structure['total'] += 1
-            om.put(structure['dates'], date_time, sightings_list)
-            om.put(map, city, structure)
-    return map
+        sightings_list = me.getValue(entry)
+    lt.addLast(sightings_list, sighting)
+    om.put(tree, city, sightings_list)
+    return tree
+
+
+def sort_sightings_req1(catalog):
+    tree = catalog['req1']
+    keys = om.keySet(tree)
+    for city in lt.iterator(keys):
+        entry = om.get(tree, city)
+        sightings_list = me.getValue(entry)
+        sorted_sightings = mer.sort(sightings_list, compare_datetime)
+        om.put(tree, city, sorted_sightings)
+    entry = om.get(tree, 'las vegas')
+    return tree
 
 
 def requirement1(catalog, city):
     """
     Arma la respuesta del requisito 1 usando el árbol del requisito 1.
     """
-    sample = lt.newList('ARRAY_LIST')
     entry = om.get(catalog['req1'], city)
-    structure = me.getValue(entry)
-    total = structure['total']
-    dates = structure['dates']
-
-    return total, sample 
+    sightings_list = me.getValue(entry)
+    return sightings_list
 
 
 def requirement2():
@@ -144,7 +131,7 @@ def requirement6():
 
 def compare_keys(key1, key2):
     """
-    Compara dos ciudades.
+    Compara dos elementos cualquiera.
     """
     if key1 == key2:
         return 0
@@ -152,5 +139,20 @@ def compare_keys(key1, key2):
         return 1
     else:
         return -1
+
+
+def compare_datetime(sighting1, sighting2):
+    """
+    Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
+    usando la libreria Datetime.
+    """
+    datetime1 = datetime.datetime.strptime(sighting1['datetime'],
+                                           '%Y-%m-%d %H:%M:%S')
+    datetime2 = datetime.datetime.strptime(sighting2['datetime'],
+                                           '%Y-%m-%d %H:%M:%S')
+    if datetime1 < datetime2:
+        return -1
+    return 0
+
 
 # Funciones de ordenamiento

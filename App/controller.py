@@ -46,6 +46,10 @@ def requirement1(catalog, city):
     return model.requirement1(catalog, city)
 
 
+def sort_sightings_req1(catalog):
+    return model.sort_sightings_req1(catalog)
+
+
 def requirement2():
     return model.requirement2()
 

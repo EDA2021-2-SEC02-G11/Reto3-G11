@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 import time
+from DISClib.ADT import list as lt
+from prettytable import PrettyTable
 assert cf
 
 
@@ -48,6 +50,7 @@ def print_load_data():
     start_time = time.process_time()
     catalog = init_catalog()
     load_data(catalog)
+    controller.sort_sightings_req1(catalog)  # Requirement 1
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
@@ -73,17 +76,26 @@ catalog = None
 
 def print_req1(catalog):
     city = input('Ingrese el nombre de la ciudad a consultar: ')
-    total, list_ = controller.requirement1(catalog, city)
+    li = controller.requirement1(catalog, city)
     city = city.title()
     print('----------------------Requirement 1: Inputs----------------------')
     print('UFO sightings in the city of '+city+'.\n')
     print('----------------------Requirement 1: Answer----------------------')
-    print('The city of '+city+' presents a total of '+str(total) +
+    print('The city of '+city+' presents a total of '+str(lt.size(li)) +
           ' UFO sightings.')
     print("""Information regarding the first and last three UFO sightings in
              the city of """.replace('\n            ', '')+city +
           ' in chronological order:')
-    #  Prettytable.
+    answ = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
+                        'Forma'])
+    for i in [1, 2, 3, -2, -1, 0]:
+        answ.add_row([lt.getElement(li, i)['datetime'],
+                      lt.getElement(li, i)['city'],
+                      lt.getElement(li, i)['country'],
+                      lt.getElement(li, i)['duration (seconds)'],
+                      lt.getElement(li, i)['shape']])
+    # answ._max_width = {'Nombre':40}
+    print(answ)
 
 
 def opcion3(catalog):
