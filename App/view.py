@@ -35,13 +35,13 @@ def print_menu():
     """
     print("\nBienvenido al menú.\n")
     print("0. Cargar datos y generar el catálogo.")
-    print("Req. 1. Contar los avistamientos en una ciudad.")
-    print("3. Opción 3: altura y número de elementos del árbol")
-    # print("Req. 2. Contar los avistamientos por duración.")
+    print("1. Contar los avistamientos en una ciudad.")
+    print("2. Contar los avistamientos por duración.")
+    print("3. Opción 3, Lab 8: altura y número de elementos del árbol")
     # print("Req. 3. Contar avistamientos por hora/minutos del día.")
-    # print("Req. 4. Contar los avistamientos en un rango de fechas.")
-    # print("Req. 5. Contar los avistamientos de una zona geográfica.")
-    # print("Req. 6 (B). Visualizar los avistamientos de una zona geográfica.")
+    print("4. Contar los avistamientos en un rango de fechas.")
+    print("5. Contar los avistamientos de una zona geográfica.")
+    print("6. Visualizar los avistamientos de una zona geográfica (Bono).")
     print("7. Detener la ejecución del programa.")
 
 
@@ -78,9 +78,9 @@ def print_req1(catalog):
     city = input('Ingrese el nombre de la ciudad a consultar: ')
     li = controller.requirement1(catalog, city)
     city = city.title()
-    print('----------------------Requirement 1: Inputs----------------------')
+    print('\n--------------------Requirement 1: Inputs--------------------\n')
     print('UFO sightings in the city of '+city+'.\n')
-    print('----------------------Requirement 1: Answer----------------------')
+    print('\n--------------------Requirement 1: Answer--------------------\n')
     print('The city of '+city+' presents a total of '+str(lt.size(li)) +
           ' UFO sightings.')
     print("""Information regarding the first and last three UFO sightings in
@@ -138,7 +138,7 @@ while True:
     print_menu()
     try:
         inputs = int(input('Seleccione una opción para continuar: \n'))
-    except:
+    except Exception:
         print(error)
         continue
     if inputs == 0:
