@@ -26,7 +26,7 @@
 
 
 import config as cf
-import datetime
+from datetime import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.Algorithms.Sorting import mergesort as mer
@@ -42,6 +42,8 @@ def new_catalog():
 
     catalog['req1'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_keys)
+    catalog['req4'] = om.newMap(omaptype='RBT',
+                                comparefunction=compare_datetime)
 
     return catalog
 
@@ -53,6 +55,7 @@ def new_catalog():
 
 def add_sighting(catalog, sighting):
     create_tree_req1(catalog['req1'], sighting)  # Requirement 1
+    create_tree_req4(catalog['req4'], sighting)  # Requirement 4
     return catalog
 
 
@@ -113,8 +116,26 @@ def requirement2():
 def requirement3():
     pass
 
+# Requirement 4
 
-def requirement4():
+def create_tree_req4(tree, sighting):
+    """
+    Crea el árbol del requisito 4.
+    El árbol tiene como llaves las fechas de avistamientos y como valores arreglos con los
+    avistamientos por fecha.
+    """
+    time=sighting["datetime"]
+    entry= om.get(tree, time)
+    if entry is None:
+        sightings_list = lt.newList('ARRAY_LIST')
+    else:
+        sightings_list = me.getValue(entry)
+    lt.addLast(sightings_list, sighting)
+    om.put(tree, time, sightings_list)
+    return tree
+
+
+def requirement4(catalog):
     pass
 
 
@@ -146,13 +167,17 @@ def compare_datetime(sighting1, sighting2):
     Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
     usando la libreria Datetime.
     """
-    datetime1 = datetime.datetime.strptime(sighting1['datetime'],
+    print(sighting1)
+    datetime1 = datetime.strptime(sighting1,
                                            '%Y-%m-%d %H:%M:%S')
-    datetime2 = datetime.datetime.strptime(sighting2['datetime'],
+    datetime2 = datetime.strptime(sighting2,
                                            '%Y-%m-%d %H:%M:%S')
-    if datetime1 < datetime2:
+    if datetime1 == datetime2:
+        return 0
+    elif datetime1 > datetime2:
+        return 1
+    else:
         return -1
-    return 0
 
 
 # Funciones de ordenamiento

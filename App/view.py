@@ -25,6 +25,7 @@ import sys
 import controller
 import time
 from DISClib.ADT import list as lt
+from DISClib.DataStructures import orderedmapstructure as ord
 from prettytable import PrettyTable
 assert cf
 
@@ -109,7 +110,7 @@ def opcion3(catalog):
 
 def print_req2():
     print('Este requerimiento aún no ha sido implementado.')
-
+    print(ord.minKey(catalog["req4"]))
 
 def print_req3():
     print('Este requerimiento aún no ha sido implementado.')
