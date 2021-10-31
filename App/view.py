@@ -110,7 +110,6 @@ def opcion3(catalog):
 
 def print_req2():
     print('Este requerimiento aún no ha sido implementado.')
-    print(ord.minKey(catalog["req4"]))
 
 def print_req3():
     print('Este requerimiento aún no ha sido implementado.')
@@ -118,6 +117,7 @@ def print_req3():
 
 def print_req4():
     print('Este requerimiento aún no ha sido implementado.')
+    print(ord.minKey(catalog["req4"]))
 
 
 def print_req5():

@@ -43,7 +43,7 @@ def new_catalog():
     catalog['req1'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_keys)
     catalog['req4'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare_datetime)
+                                comparefunction=compareTime)
 
     return catalog
 
@@ -124,7 +124,7 @@ def create_tree_req4(tree, sighting):
     El árbol tiene como llaves las fechas de avistamientos y como valores arreglos con los
     avistamientos por fecha.
     """
-    time=sighting["datetime"]
+    time=sighting["datetime"][:10]
     entry= om.get(tree, time)
     if entry is None:
         sightings_list = lt.newList('ARRAY_LIST')
@@ -167,11 +167,24 @@ def compare_datetime(sighting1, sighting2):
     Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
     usando la libreria Datetime.
     """
-    print(sighting1)
+    datetime1 = datetime.strptime(sighting1['datetime'],
+                                           '%Y-%m-%d %H:%M:%S')
+    datetime2 = datetime.strptime(sighting2['datetime'],
+                                           '%Y-%m-%d %H:%M:%S')
+    if datetime1 < datetime2:
+        return -1
+    return 0
+
+def compareTime(sighting1, sighting2):
+    """
+    Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
+    usando la libreria Datetime.
+    """
     datetime1 = datetime.strptime(sighting1,
-                                           '%Y-%m-%d %H:%M:%S')
+                                           '%Y-%m-%d').date()
     datetime2 = datetime.strptime(sighting2,
-                                           '%Y-%m-%d %H:%M:%S')
+                                           '%Y-%m-%d').date()
+    print(datetime1)
     if datetime1 == datetime2:
         return 0
     elif datetime1 > datetime2:
