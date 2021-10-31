@@ -135,9 +135,9 @@ def create_tree_req4(tree, sighting):
     return tree
 
 
-def requirement4(catalog):
-    pass
-
+def requirement4(catalog,fechaMin,fechaMax):
+    res= om.values(catalog["req4"],fechaMin,fechaMax)
+    return res
 
 def requirement5():
     pass

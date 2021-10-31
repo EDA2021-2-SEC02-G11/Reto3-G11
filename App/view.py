@@ -116,9 +116,21 @@ def print_req3():
 
 
 def print_req4():
+    fechaMin=input("Digite la fecha minima: ")
+    fechaMax=input("Digite la fecha maxima: ")
     print('Este requerimiento aún no ha sido implementado.')
     print(ord.minKey(catalog["req4"]))
-
+    rango=controller.requirement4(catalog,fechaMin,fechaMax)
+    print(rango)
+    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
+                        'Forma'])
+    for i in [1, 2, 3, -2, -1, 0]:
+        table.add_row([lt.getElement(rango, i)['datetime'],
+                      lt.getElement(rango, i)['city'],
+                      lt.getElement(rango, i)['country'],
+                      lt.getElement(rango, i)['duration (seconds)'],
+                      lt.getElement(rango, i)['shape']])
+    print(table)
 
 def print_req5():
     print('Este requerimiento aún no ha sido implementado.')
