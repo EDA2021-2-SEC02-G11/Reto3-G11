@@ -38,16 +38,8 @@ def load_data(catalog):
         model.add_sighting(catalog, sighting)
 
 
-def opcion3(catalog):
-    return model.opcion3(catalog)
-
-
 def requirement1(catalog, city):
     return model.requirement1(catalog, city)
-
-
-def sort_sightings_req1(catalog):
-    return model.sort_sightings_req1(catalog)
 
 
 def requirement2():

@@ -50,7 +50,6 @@ def print_load_data():
     start_time = time.process_time()
     catalog = init_catalog()
     load_data(catalog)
-    controller.sort_sightings_req1(catalog)  # Requirement 1
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
@@ -76,24 +75,23 @@ catalog = None
 
 def print_req1(catalog):
     city = input('Ingrese el nombre de la ciudad a consultar: ')
-    li = controller.requirement1(catalog, city)
+    total, sample = controller.requirement1(catalog, city)
     city = city.title()
     print('\n--------------------Requirement 1: Inputs--------------------\n')
     print('UFO sightings in the city of '+city+'.\n')
     print('\n--------------------Requirement 1: Answer--------------------\n')
-    print('The city of '+city+' presents a total of '+str(lt.size(li)) +
+    print('The city of '+city+' presents a total of '+str(total) +
           ' UFO sightings.')
-    print("""Information regarding the first and last three UFO sightings in
-             the city of """.replace('\n            ', '')+city +
-          ' in chronological order:')
+    print('Information regarding the first and last three UFO sightings in' +
+          ' the city of '+city+' in chronological order:')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
-    for i in [1, 2, 3, -2, -1, 0]:
-        table.add_row([lt.getElement(li, i)['datetime'],
-                      lt.getElement(li, i)['city'],
-                      lt.getElement(li, i)['country'],
-                      lt.getElement(li, i)['duration (seconds)'],
-                      lt.getElement(li, i)['shape']])
+    for i in [1, 2, 3, 4, 5, 6]:
+        table.add_row([lt.getElement(sample, i)['datetime'],
+                      lt.getElement(sample, i)['city'],
+                      lt.getElement(sample, i)['country'],
+                      lt.getElement(sample, i)['duration (seconds)'],
+                      lt.getElement(sample, i)['shape']])
     print(table)
 
 

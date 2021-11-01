@@ -29,7 +29,6 @@ import config as cf
 from datetime import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
-from DISClib.Algorithms.Sorting import mergesort as mer
 from DISClib.DataStructures import mapentry as me
 assert cf
 
@@ -62,42 +61,52 @@ def add_sighting(catalog, sighting):
 # Requirement 1
 
 
-def create_tree_req1(tree, sighting):
+def create_tree_req1(map, sighting):
     """
     Crea el árbol del requisito 1.
-    El árbol tiene como llaves ciudades y como valores arreglos con los
-    avistamientos por ciudad.
+    El árbol tiene como llaves ciudades y como valores árboles.
+    Cada árbol tiene como llaves fechas (con hora, en formato datetime) y el
+    valor correspondiente a cada llave es el avistamiento en la ciudad dada a
+    la fecha y hora de la llave.
+    Nótese que en los datos no hay dos avistamientos que hayan ocurrido en la
+    misma ciudad y en la misma fecha, hora, minuto y segundo.
     """
-    city = sighting['city']
-    entry = om.get(tree, city)
+    entry = om.get(map, sighting['city'])
     if entry is None:
-        sightings_list = lt.newList('ARRAY_LIST')
+        dates = om.newMap(omaptype='RBT',
+                          comparefunction=compare_keys)
+        date = datetime.strptime(sighting['datetime'],
+                                 '%Y-%m-%d %H:%M:%S')
+        om.put(dates, date, sighting)
+        om.put(map, sighting['city'], dates)
     else:
-        sightings_list = me.getValue(entry)
-    lt.addLast(sightings_list, sighting)
-    om.put(tree, city, sightings_list)
-    return tree
-
-
-def sort_sightings_req1(catalog):
-    tree = catalog['req1']
-    keys = om.keySet(tree)
-    for city in lt.iterator(keys):
-        entry = om.get(tree, city)
-        sightings_list = me.getValue(entry)
-        sorted_sightings = mer.sort(sightings_list, compare_datetime)
-        om.put(tree, city, sorted_sightings)
-    entry = om.get(tree, 'las vegas')
-    return tree
+        dates = me.getValue(entry)
+        date = datetime.strptime(sighting['datetime'],
+                                 '%Y-%m-%d %H:%M:%S')
+        om.put(dates, date, sighting)
+    return map
 
 
 def requirement1(catalog, city):
     """
     Arma la respuesta del requisito 1 usando el árbol del requisito 1.
     """
-    entry = om.get(catalog['req1'], city)
-    sightings_list = me.getValue(entry)
-    return sightings_list
+    sample = lt.newList(datastructure='ARRAY')
+    tree_req1 = catalog['req1']
+    entry_tree_cities = om.get(tree_req1, city)
+    tree_cities = me.getValue(entry_tree_cities)
+    total = om.size(tree_cities)
+    min_ = om.minKey(tree_cities)
+    second = om.select(tree_cities, 1)
+    third = om.select(tree_cities, 2)
+    max_ = om.maxKey(tree_cities)
+    second_to_last = om.select(tree_cities, total-2)
+    third_to_last = om.select(tree_cities, total-3)
+    for i in min_, second, third, third_to_last, second_to_last, max_:
+        entry_sighting = om.get(tree_cities, i)
+        sighting = me.getValue(entry_sighting)
+        lt.addLast(sample, sighting)
+    return total, sample
 
 
 def requirement2():
@@ -156,30 +165,30 @@ def compare_keys(key1, key2):
         return -1
 
 
-def compare_datetime(sighting1, sighting2):
+def compare_datetime(datetime1, datetime2):
     """
     Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
     usando la libreria Datetime.
     """
-    datetime1 = datetime.strptime(sighting1['datetime'],
-                                  '%Y-%m-%d %H:%M:%S')
-    datetime2 = datetime.strptime(sighting2['datetime'],
-                                  '%Y-%m-%d %H:%M:%S')
-    if datetime1 < datetime2:
+    date1 = datetime.strptime(datetime1,
+                              '%Y-%m-%d %H:%M:%S')
+    date2 = datetime.strptime(datetime2,
+                              '%Y-%m-%d %H:%M:%S')
+    if date1 < date2:
         return -1
     return 0
 
 
 def compareTime(sighting1, sighting2):
     """
-    Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
+    Compara dos fechas con hora en el formato YYYY-MM-DD
     usando la libreria Datetime.
     """
     datetime1 = datetime.strptime(sighting1,
                                   '%Y-%m-%d').date()
     datetime2 = datetime.strptime(sighting2,
                                   '%Y-%m-%d').date()
-    print(datetime1)
+    # print(datetime1)
     if datetime1 == datetime2:
         return 0
     elif datetime1 > datetime2:
