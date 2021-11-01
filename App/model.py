@@ -43,7 +43,7 @@ def new_catalog():
     catalog['req1'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_keys)
     catalog['req2'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare_keys)
+                                comparefunction=compare_durations)
     catalog['req4'] = om.newMap(omaptype='RBT',
                                 comparefunction=compareTime)
 
@@ -155,8 +155,16 @@ def country_city_key(sighting):
     return llave
 
 
-def requirement2():
-    pass
+def requirement2(catalog, sec_min, sec_max):
+    # sample = lt.newList(datastructure='ARRAY')
+    tree_req2 = catalog['req2']
+    total_durations = om.size(tree_req2)
+    top_duration = om.maxKey(tree_req2)
+    country_city_entry_top = om.get(tree_req2, top_duration)
+    country_city_tree_top = me.getValue(country_city_entry_top)
+    count_top_duration = om.size(country_city_tree_top)
+    # TODO: for para 3 top 3 last
+    return total_durations, top_duration, count_top_duration
 
 
 # Requirement 2
@@ -210,6 +218,20 @@ def compare_keys(key1, key2):
     """
     Compara dos elementos cualquiera.
     """
+    if key1 == key2:
+        return 0
+    elif key1 > key2:
+        return 1
+    else:
+        return -1
+
+
+def compare_durations(duration1, duration2):
+    """
+    Compara dos duraciones que entran como cadenas de caracteres.
+    """
+    key1 = float(duration1)
+    key2 = float(duration2)
     if key1 == key2:
         return 0
     elif key1 > key2:

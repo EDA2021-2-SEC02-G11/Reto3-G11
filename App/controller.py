@@ -42,8 +42,8 @@ def requirement1(catalog, city):
     return model.requirement1(catalog, city)
 
 
-def requirement2():
-    return model.requirement2()
+def requirement2(catalog, sec_min, sec_max):
+    return model.requirement2(catalog, sec_min, sec_max)
 
 
 def requirement3():

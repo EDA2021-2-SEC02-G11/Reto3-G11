@@ -97,8 +97,8 @@ def print_req1(catalog):
           str(total_cities)+'.')
     print('The city of '+city+' presents a total of '+str(total) +
           ' UFO sightings.')
-    print('Information regarding the first and last three UFO sightings in' +
-          ' the city of '+city+' in chronological order:')
+    print('Information regarding the first and last three UFO sightings in ' +
+          'the city of '+city+' in chronological order:')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
     for i in [1, 2, 3, 4, 5, 6]:
@@ -111,7 +111,19 @@ def print_req1(catalog):
 
 
 def print_req2():
-    print('Este requerimiento aún no ha sido implementado.')
+    sec_min = input('Ingrese un límite inferior en segundos: ')
+    sec_max = input('Ingrese un límite superior en segundos: ')
+    r2 = controller.requirement2(catalog, sec_min, sec_max)
+    total_durations, top_duration, count_top = r2
+    print('\n--------------------Requirement 2: Inputs--------------------\n')
+    print('UFO sightings with durations bewteen '+str(float(sec_min))+' s ' +
+          'and '+str(float(sec_max))+' s.\n')
+    print('\n--------------------Requirement 2: Answer--------------------\n')
+    print('There are '+str(total_durations)+' different durations of UFO ' +
+          'sightings in total.')
+    print('The longest UFO sighting recorded lasts for '+str(top_duration) +
+          ' s. There are '+str(count_top)+' UFO sightings that last ' +
+          'that long.')
 
 
 def print_req3():
