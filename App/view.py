@@ -38,8 +38,7 @@ def print_menu():
     print("0. Cargar datos y generar el catálogo.")
     print("1. Contar los avistamientos en una ciudad.")
     print("2. Contar los avistamientos por duración.")
-    print("3. Opción 3, Lab 8: altura y número de elementos del árbol")
-    # print("Req. 3. Contar avistamientos por hora/minutos del día.")
+    print("3. Contar avistamientos por hora/minutos del día.")
     print("4. Contar los avistamientos en un rango de fechas.")
     print("5. Contar los avistamientos de una zona geográfica.")
     print("6. Visualizar los avistamientos de una zona geográfica (Bono).")
@@ -98,29 +97,20 @@ def print_req1(catalog):
     print(table)
 
 
-def opcion3(catalog):
-    height, size = controller.opcion3(catalog)
-    print('\n--------------------Opción 3 Laboratorio 8--------------------\n')
-    print('Se despliegan los datos característicos (altura y número de elem' +
-          'entos) del árbol RBT de ciudades usado para el requerimiento 1, ' +
-          'como se pide en el laboratorio 8.\n')
-    print('La altura del árbol RBT de ciudades es: '+str(height))
-    print('El número de elementos en el árbol RBT de ciudades es: '+str(size))
-
-
 def print_req2():
     print('Este requerimiento aún no ha sido implementado.')
+
 
 def print_req3():
     print('Este requerimiento aún no ha sido implementado.')
 
 
 def print_req4():
-    fechaMin=input("Digite la fecha minima: ")
-    fechaMax=input("Digite la fecha maxima: ")
+    fechaMin = input("Digite la fecha minima: ")
+    fechaMax = input("Digite la fecha maxima: ")
     print('Este requerimiento aún no ha sido implementado.')
     print(ord.minKey(catalog["req4"]))
-    rango=controller.requirement4(catalog,fechaMin,fechaMax)
+    rango = controller.requirement4(catalog, fechaMin, fechaMax)
     print(rango)
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
@@ -131,6 +121,7 @@ def print_req4():
                       lt.getElement(rango, i)['duration (seconds)'],
                       lt.getElement(rango, i)['shape']])
     print(table)
+
 
 def print_req5():
     print('Este requerimiento aún no ha sido implementado.')
@@ -163,7 +154,7 @@ while True:
         elif inputs == 2:
             print_req2()
         elif inputs == 3:
-            opcion3(catalog)
+            print_req3()
         elif inputs == 4:
             print_req4()
         elif inputs == 5:

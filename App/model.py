@@ -59,15 +59,6 @@ def add_sighting(catalog, sighting):
     return catalog
 
 
-# Lab 8
-
-
-def opcion3(catalog):
-    height = om.height(catalog['req1'])
-    size = om.size(catalog['req1'])
-    return height, size
-
-
 # Requirement 1
 
 
@@ -75,7 +66,7 @@ def create_tree_req1(tree, sighting):
     """
     Crea el árbol del requisito 1.
     El árbol tiene como llaves ciudades y como valores arreglos con los
-    avistamientos en por ciudad.
+    avistamientos por ciudad.
     """
     city = sighting['city']
     entry = om.get(tree, city)
@@ -116,16 +107,18 @@ def requirement2():
 def requirement3():
     pass
 
+
 # Requirement 4
+
 
 def create_tree_req4(tree, sighting):
     """
     Crea el árbol del requisito 4.
-    El árbol tiene como llaves las fechas de avistamientos y como valores arreglos con los
-    avistamientos por fecha.
+    El árbol tiene como llaves las fechas de avistamientos y como valores
+    arreglos con los avistamientos por fecha.
     """
-    time=sighting["datetime"][:10]
-    entry= om.get(tree, time)
+    time = sighting["datetime"][:10]
+    entry = om.get(tree, time)
     if entry is None:
         sightings_list = lt.newList('ARRAY_LIST')
     else:
@@ -135,9 +128,10 @@ def create_tree_req4(tree, sighting):
     return tree
 
 
-def requirement4(catalog,fechaMin,fechaMax):
-    res= om.values(catalog["req4"],fechaMin,fechaMax)
+def requirement4(catalog, fechaMin, fechaMax):
+    res = om.values(catalog["req4"], fechaMin, fechaMax)
     return res
+
 
 def requirement5():
     pass
@@ -168,12 +162,13 @@ def compare_datetime(sighting1, sighting2):
     usando la libreria Datetime.
     """
     datetime1 = datetime.strptime(sighting1['datetime'],
-                                           '%Y-%m-%d %H:%M:%S')
+                                  '%Y-%m-%d %H:%M:%S')
     datetime2 = datetime.strptime(sighting2['datetime'],
-                                           '%Y-%m-%d %H:%M:%S')
+                                  '%Y-%m-%d %H:%M:%S')
     if datetime1 < datetime2:
         return -1
     return 0
+
 
 def compareTime(sighting1, sighting2):
     """
@@ -181,9 +176,9 @@ def compareTime(sighting1, sighting2):
     usando la libreria Datetime.
     """
     datetime1 = datetime.strptime(sighting1,
-                                           '%Y-%m-%d').date()
+                                  '%Y-%m-%d').date()
     datetime2 = datetime.strptime(sighting2,
-                                           '%Y-%m-%d').date()
+                                  '%Y-%m-%d').date()
     print(datetime1)
     if datetime1 == datetime2:
         return 0

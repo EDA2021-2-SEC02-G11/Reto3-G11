@@ -57,8 +57,9 @@ def requirement2():
 def requirement3():
     return model.requirement3()
 
-def requirement4(catalog,fechaMin,fechaMax):
-    return model.requirement4(catalog,fechaMin,fechaMax)
+
+def requirement4(catalog, fechaMin, fechaMax):
+    return model.requirement4(catalog, fechaMin, fechaMax)
 
 
 def requirement5():
