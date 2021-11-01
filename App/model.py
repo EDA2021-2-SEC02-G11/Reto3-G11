@@ -93,6 +93,7 @@ def requirement1(catalog, city):
     """
     sample = lt.newList(datastructure='ARRAY')
     tree_req1 = catalog['req1']
+    total_cities = om.size(tree_req1)
     entry_tree_cities = om.get(tree_req1, city)
     tree_cities = me.getValue(entry_tree_cities)
     total = om.size(tree_cities)
@@ -106,7 +107,7 @@ def requirement1(catalog, city):
         entry_sighting = om.get(tree_cities, i)
         sighting = me.getValue(entry_sighting)
         lt.addLast(sample, sighting)
-    return total, sample
+    return total_cities, total, sample
 
 
 def requirement2():
@@ -163,20 +164,6 @@ def compare_keys(key1, key2):
         return 1
     else:
         return -1
-
-
-def compare_datetime(datetime1, datetime2):
-    """
-    Compara dos fechas con hora en el formato YYYY-MM-DD HH:MM:SS
-    usando la libreria Datetime.
-    """
-    date1 = datetime.strptime(datetime1,
-                              '%Y-%m-%d %H:%M:%S')
-    date2 = datetime.strptime(datetime2,
-                              '%Y-%m-%d %H:%M:%S')
-    if date1 < date2:
-        return -1
-    return 0
 
 
 def compareTime(sighting1, sighting2):

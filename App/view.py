@@ -75,11 +75,13 @@ catalog = None
 
 def print_req1(catalog):
     city = input('Ingrese el nombre de la ciudad a consultar: ')
-    total, sample = controller.requirement1(catalog, city)
+    total_cities, total, sample = controller.requirement1(catalog, city)
     city = city.title()
     print('\n--------------------Requirement 1: Inputs--------------------\n')
     print('UFO sightings in the city of '+city+'.\n')
     print('\n--------------------Requirement 1: Answer--------------------\n')
+    print('The number of cities that present UFO sightings is ' +
+          str(total_cities)+'.')
     print('The city of '+city+' presents a total of '+str(total) +
           ' UFO sightings.')
     print('Information regarding the first and last three UFO sightings in' +
