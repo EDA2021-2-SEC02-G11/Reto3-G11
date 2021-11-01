@@ -39,7 +39,10 @@ def new_catalog():
     """
     catalog = {}
 
+    catalog['sightings'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['req1'] = om.newMap(omaptype='RBT',
+                                comparefunction=compare_keys)
+    catalog['req2'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_keys)
     catalog['req4'] = om.newMap(omaptype='RBT',
                                 comparefunction=compareTime)
@@ -47,13 +50,13 @@ def new_catalog():
     return catalog
 
 
-# Construccion de modelos
-
-# Funciones para agregar informacion al catalogo
+# Funciones para agregar información al catalogo
 
 
 def add_sighting(catalog, sighting):
+    lt.addLast(catalog['sightings'], sighting)  # Load data
     create_tree_req1(catalog['req1'], sighting)  # Requirement 1
+    create_tree_req2(catalog['req2'], sighting)  # Requirement 2
     create_tree_req4(catalog['req4'], sighting)  # Requirement 4
     return catalog
 
@@ -61,7 +64,7 @@ def add_sighting(catalog, sighting):
 # Requirement 1
 
 
-def create_tree_req1(map, sighting):
+def create_tree_req1(tree_req1, sighting):
     """
     Crea el árbol del requisito 1.
     El árbol tiene como llaves ciudades y como valores árboles.
@@ -71,20 +74,20 @@ def create_tree_req1(map, sighting):
     Nótese que en los datos no hay dos avistamientos que hayan ocurrido en la
     misma ciudad y en la misma fecha, hora, minuto y segundo.
     """
-    entry = om.get(map, sighting['city'])
+    entry = om.get(tree_req1, sighting['city'])
     if entry is None:
         dates = om.newMap(omaptype='RBT',
                           comparefunction=compare_keys)
         date = datetime.strptime(sighting['datetime'],
                                  '%Y-%m-%d %H:%M:%S')
         om.put(dates, date, sighting)
-        om.put(map, sighting['city'], dates)
+        om.put(tree_req1, sighting['city'], dates)
     else:
         dates = me.getValue(entry)
         date = datetime.strptime(sighting['datetime'],
                                  '%Y-%m-%d %H:%M:%S')
         om.put(dates, date, sighting)
-    return map
+    return tree_req1
 
 
 def requirement1(catalog, city):
@@ -110,7 +113,56 @@ def requirement1(catalog, city):
     return total_cities, total, sample
 
 
+# Requirement 2
+
+
+def create_tree_req2(tree_req2, sighting):
+    """
+    Crea el árbol del requisito 2.
+    El árbol tiene como llaves duraciones en segundos y como valores árboles.
+    Cada árbol tiene como llaves cadenas de caracteres de forma 'zz-ciudad',
+    donde zz representa el acrónimo del país, y como valores arreglos con todos
+    los avistamientos de dicha duración en segundos que ocurrieron en el país y
+    ciudad dados. Para los que no tienen país se pone 'zz'.
+    Nótese que en los datos ocurre que hay varios avistamientos con igual
+    duración en segundos que ocurrieron en la misma ciudad.
+    """
+    entry = om.get(tree_req2, sighting['duration (seconds)'])
+    if entry is None:
+        countries_cities = om.newMap(omaptype='RBT',
+                                     comparefunction=compare_keys)
+        country_city = country_city_key(sighting)
+        om.put(countries_cities, country_city, sighting)
+        om.put(tree_req2, sighting['duration (seconds)'], countries_cities)
+    else:
+        countries_cities = me.getValue(entry)
+        country_city = country_city_key(sighting)
+        om.put(countries_cities, country_city, sighting)
+    return tree_req2
+
+
+def country_city_key(sighting):
+    """
+    Retorna una cadena de caracteres con el formato 'zz-ciudad' donde zz
+    representa el acrónimo del país, para un avistamiento dado.
+    Para los que no tienen país se pone 'zz' como acrónimo del país.
+    """
+    country = sighting['country'].strip()
+    if country == '':
+        country = 'zz'
+    city = sighting['city'].strip()
+    llave = country+'-'+city
+    return llave
+
+
 def requirement2():
+    pass
+
+
+# Requirement 2
+
+
+def create_tree_req3(tree, sighting):
     pass
 
 

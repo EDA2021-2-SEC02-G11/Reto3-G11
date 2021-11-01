@@ -34,25 +34,38 @@ def print_menu():
     """
     Imprime las opciones del menú.
     """
-    print("\nBienvenido al menú.\n")
-    print("0. Cargar datos y generar el catálogo.")
-    print("1. Contar los avistamientos en una ciudad.")
-    print("2. Contar los avistamientos por duración.")
-    print("3. Contar avistamientos por hora/minutos del día.")
-    print("4. Contar los avistamientos en un rango de fechas.")
-    print("5. Contar los avistamientos de una zona geográfica.")
-    print("6. Visualizar los avistamientos de una zona geográfica (Bono).")
-    print("7. Detener la ejecución del programa.")
+    print('\nBienvenido al menú.\n')
+    print('0. Cargar datos y generar el catálogo.')
+    print('1. Contar los avistamientos en una ciudad.')
+    print('2. Contar los avistamientos por duración.')
+    print('3. Contar avistamientos por hora/minutos del día.')
+    print('4. Contar los avistamientos en un rango de fechas.')
+    print('5. Contar los avistamientos de una zona geográfica.')
+    print('6. Visualizar los avistamientos de una zona geográfica (Bono).')
+    print('7. Detener la ejecución del programa.')
 
 
 def print_load_data():
-    print("Cargando información de los archivos...")
+    print('Cargando información de los archivos...')
     start_time = time.process_time()
     catalog = init_catalog()
     load_data(catalog)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
+    print('Se cargaron '+str(lt.size(catalog['sightings']))+' avistamientos ' +
+          'de OVNIS.')
+    print('Primeros cinco y últimos cinco avistamientos cargados: ')
+    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
+                        'Forma'])
+    ll = catalog['sightings']
+    for i in [1, 2, 3, 4, 5, -4, -3, -2, -1, 0]:
+        table.add_row([lt.getElement(ll, i)['datetime'],
+                       lt.getElement(ll, i)['city'],
+                       lt.getElement(ll, i)['country'],
+                       lt.getElement(ll, i)['duration (seconds)'],
+                       lt.getElement(ll, i)['shape']])
+    print(table)
     return catalog
 
 
@@ -106,10 +119,10 @@ def print_req3():
 
 
 def print_req4():
-    fechaMin = input("Digite la fecha minima: ")
-    fechaMax = input("Digite la fecha maxima: ")
+    fechaMin = input('Digite la fecha minima: ')
+    fechaMax = input('Digite la fecha maxima: ')
     print('Este requerimiento aún no ha sido implementado.')
-    print(ord.minKey(catalog["req4"]))
+    print(ord.minKey(catalog['req4']))
     rango = controller.requirement4(catalog, fechaMin, fechaMax)
     print(rango)
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
@@ -136,8 +149,8 @@ Menú principal
 """
 while True:
     error = '\nError: Por favor ingrese un número entero entre 0 y 7.\n'
-    error_cargar = """\nError: Se deben cargar los datos antes de usar los
-                      requisitos.\n""".replace('\n                     ', '')
+    error_cargar = ('\nError: Se deben cargar los datos antes de usar los' +
+                    ' requisitos.\n')
     print_menu()
     try:
         inputs = int(input('Seleccione una opción para continuar: \n'))
