@@ -167,7 +167,7 @@ def requirement2(catalog, sec_min, sec_max):
     return total_durations, top_duration, count_top_duration
 
 
-# Requirement 2
+# Requirement 3
 
 
 def create_tree_req3(tree, sighting):
@@ -199,11 +199,36 @@ def create_tree_req4(tree, sighting):
 
 
 def requirement4(catalog, fechaMin, fechaMax):
-    res = om.values(catalog["req4"], fechaMin, fechaMax)
-    return res
+    tree_req4 = catalog["req4"]
+    total_dates = om.size(tree_req4)
+    oldest = om.minKey(tree_req4)
+    entry_oldest = om.get(tree_req4, oldest)
+    oldest_array = me.getValue(entry_oldest)
+    n_oldest = lt.size(oldest_array)
+    range_values = om.values(tree_req4, fechaMin, fechaMax)
+    rango = lt.newList(datastructure='ARRAY_LIST')
+    n_rango = lt.size(range_values)
+    for i in 1, 2, 3, n_rango-2, n_rango-1, n_rango:
+        sighting = lt.getElement(lt.getElement(range_values, i), 1)
+        lt.addLast(rango, sighting)
+    return total_dates, oldest, n_oldest, n_rango, rango
+
+
+# Requirement 5
+
+
+def create_tree_req5(tree, sighting):
+    pass
 
 
 def requirement5():
+    pass
+
+
+# Requirement 6
+
+
+def create_tree_req6(tree, sighting):
     pass
 
 
@@ -256,6 +281,3 @@ def compareTime(sighting1, sighting2):
         return 1
     else:
         return -1
-
-
-# Funciones de ordenamiento

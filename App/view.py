@@ -25,7 +25,6 @@ import sys
 import controller
 import time
 from DISClib.ADT import list as lt
-from DISClib.DataStructures import orderedmapstructure as ord
 from prettytable import PrettyTable
 assert cf
 
@@ -46,20 +45,20 @@ def print_menu():
 
 
 def print_load_data():
-    print('Cargando información de los archivos...')
+    print('Cargando información de los archivos...\n')
     start_time = time.process_time()
     catalog = init_catalog()
     load_data(catalog)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
-    print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.')
+    print('La carga de los datos demoró '+str(elapsed_time_mseg)+' ms.\n')
     print('Se cargaron '+str(lt.size(catalog['sightings']))+' avistamientos ' +
-          'de OVNIS.')
+          'de OVNIS.\n')
     print('Primeros cinco y últimos cinco avistamientos cargados: ')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
     ll = catalog['sightings']
-    for i in [1, 2, 3, 4, 5, -4, -3, -2, -1, 0]:
+    for i in 1, 2, 3, 4, 5, -4, -3, -2, -1, 0:
         table.add_row([lt.getElement(ll, i)['datetime'],
                        lt.getElement(ll, i)['city'],
                        lt.getElement(ll, i)['country'],
@@ -93,15 +92,15 @@ def print_req1(catalog):
     print('\n--------------------Requirement 1: Inputs--------------------\n')
     print('UFO sightings in the city of '+city+'.\n')
     print('\n--------------------Requirement 1: Answer--------------------\n')
-    print('The number of cities that present UFO sightings is ' +
-          str(total_cities)+'.')
+    print('There are '+str(total_cities)+' different cities that present ' +
+          'UFO sightings.\n')
     print('The city of '+city+' presents a total of '+str(total) +
-          ' UFO sightings.')
+          ' UFO sightings.\n')
     print('Information regarding the first and last three UFO sightings in ' +
           'the city of '+city+' in chronological order:')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
-    for i in [1, 2, 3, 4, 5, 6]:
+    for i in 1, 2, 3, 4, 5, 6:
         table.add_row([lt.getElement(sample, i)['datetime'],
                       lt.getElement(sample, i)['city'],
                       lt.getElement(sample, i)['country'],
@@ -110,7 +109,7 @@ def print_req1(catalog):
     print(table)
 
 
-def print_req2():
+def print_req2(catalog):
     sec_min = input('Ingrese un límite inferior en segundos: ')
     sec_max = input('Ingrese un límite superior en segundos: ')
     r2 = controller.requirement2(catalog, sec_min, sec_max)
@@ -120,26 +119,36 @@ def print_req2():
           'and '+str(float(sec_max))+' s.\n')
     print('\n--------------------Requirement 2: Answer--------------------\n')
     print('There are '+str(total_durations)+' different durations of UFO ' +
-          'sightings in total.')
+          'sightings in total.\n')
     print('The longest UFO sighting recorded lasts for '+str(top_duration) +
           ' s. There are '+str(count_top)+' UFO sightings that last ' +
-          'that long.')
+          'that long.\n')
 
 
-def print_req3():
+def print_req3(catalog):
     print('Este requerimiento aún no ha sido implementado.')
 
 
-def print_req4():
+def print_req4(catalog):
     fechaMin = input('Digite la fecha minima: ')
     fechaMax = input('Digite la fecha maxima: ')
-    print('Este requerimiento aún no ha sido implementado.')
-    print(ord.minKey(catalog['req4']))
-    rango = controller.requirement4(catalog, fechaMin, fechaMax)
-    print(rango)
+    r4 = controller.requirement4(catalog, fechaMin, fechaMax)
+    total_dates, oldest, n_oldest, n_rango, rango = r4
+    print('\n--------------------Requirement 4: Inputs--------------------\n')
+    print('UFO sightings that occurred between '+fechaMin+' and ' +
+          fechaMax+'.\n')
+    print('\n--------------------Requirement 4: Answer--------------------\n')
+    print('There are '+str(total_dates)+' UFO sightings that occurred ' +
+          'on different dates.\n')
+    print('The oldest UFO sighting recorded happened on '+str(oldest) +
+          '. There were '+str(n_oldest)+' UFO sightings on that day.\n')
+    print('There are '+str(n_rango)+' UFO sightings that occurred between ' +
+          fechaMin+' and '+fechaMax+'.\n')
+    print('Information regarding the first and last three UFO sightings ' +
+          'between '+fechaMin+' and '+fechaMax+' in chronological order:')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
                         'Forma'])
-    for i in [1, 2, 3, -2, -1, 0]:
+    for i in 1, 2, 3, -2, -1, 0:
         table.add_row([lt.getElement(rango, i)['datetime'],
                       lt.getElement(rango, i)['city'],
                       lt.getElement(rango, i)['country'],
@@ -148,11 +157,11 @@ def print_req4():
     print(table)
 
 
-def print_req5():
+def print_req5(catalog):
     print('Este requerimiento aún no ha sido implementado.')
 
 
-def print_req6():
+def print_req6(catalog):
     print('Este requerimiento aún no ha sido implementado.')
 
 
@@ -177,15 +186,15 @@ while True:
         elif inputs == 1:
             print_req1(catalog)
         elif inputs == 2:
-            print_req2()
+            print_req2(catalog)
         elif inputs == 3:
-            print_req3()
+            print_req3(catalog)
         elif inputs == 4:
-            print_req4()
+            print_req4(catalog)
         elif inputs == 5:
-            print_req5()
+            print_req5(catalog)
         elif inputs == 6:
-            print_req6()
+            print_req6(catalog)
     elif inputs > 7:
         print(error)
     else:
