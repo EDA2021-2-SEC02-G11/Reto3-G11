@@ -208,9 +208,17 @@ def requirement4(catalog, fechaMin, fechaMax):
     range_values = om.values(tree_req4, fechaMin, fechaMax)
     rango = lt.newList(datastructure='ARRAY_LIST')
     n_rango = lt.size(range_values)
-    for i in 1, 2, 3, n_rango-2, n_rango-1, n_rango:
-        sighting = lt.getElement(lt.getElement(range_values, i), 1)
-        lt.addLast(rango, sighting)
+    n_rango_for = n_rango
+    for i in 1, 2, 3, n_rango_for-2, n_rango_for-1, n_rango_for:
+        sightings_array = lt.getElement(range_values, i)
+        if lt.size(sightings_array) <= 1:
+            sighting = lt.getElement(sightings_array, 1)
+            lt.addLast(rango, sighting)
+        else:
+            n_rango -= 1
+            for sighting in lt.iterator(sightings_array):
+                n_rango += 1
+                lt.addLast(rango, sighting)
     return total_dates, oldest, n_oldest, n_rango, rango
 
 
