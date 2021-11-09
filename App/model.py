@@ -165,99 +165,33 @@ def requirement2(catalog, sec_min, sec_max):
     count_top_duration = om.size(country_city_tree_top)
     # Top 3 and last 3
     sample = lt.newList(datastructure='ARRAY')
-    key_min = om.ceiling(tree_req2, sec_min)
-    key_max = om.floor(tree_req2, sec_max)
-    entry_min = om.get(tree_req2, key_min)
-    entry_max = om.get(tree_req2, key_max)
-    zz_tree_min = me.getValue(entry_min)
-    zz_tree_max = me.getValue(entry_max)
-    while lt.size(sample) <= 3:
-        sightings_list = om.valueSet(zz_tree_min)
-        if lt.size(sightings_list) == 1:
-            sighting = lt.getElement(sightings_list, 1)
+    key_list = om.keys(tree_req2, sec_min, sec_max)
+    nrange = lt.size(key_list)
+    i = 1
+    while lt.size(sample) < 3 and i <= nrange:
+        key = lt.getElement(key_list, i)
+        entry = om.get(tree_req2, key)
+        zz_tree = me.getValue(entry)
+        sightings_list = om.valueSet(zz_tree)
+        j = 1
+        while lt.size(sample) < 3 and j <= lt.size(sightings_list):
+            sighting = lt.getElement(sightings_list, j)
             lt.addLast(sample, sighting)
-            second = om.select(tree_req2, 1)
-            entry_second = om.get(tree_req2, second)
-            zz_tree_second = me.getValue(entry_second)
-            sightings_list = om.valueSet(zz_tree_second)
-            if lt.size(sightings_list) == 1:
-                sighting = lt.getElement(sightings_list, 1)
-                lt.addLast(sample, sighting)
-                third = om.select(tree_req2, 2)
-                entry_third = om.get(tree_req2, third)
-                zz_tree_third = me.getValue(entry_third)
-                key_3 = om.minKey(zz_tree_third)
-                entry3 = om.get(zz_tree_third, key_3)
-                sighting = me.getValue(entry3)
-                lt.addLast(sample, sighting)
-                break
-            else:  # Size of second is at least 2
-                sighting2 = lt.getElement(sightings_list, 1)
-                sighting3 = lt.getElement(sightings_list, 2)
-                lt.addLast(sample, sighting2)
-                lt.addLast(sample, sighting3)
-                break
-        elif lt.size(sightings_list) == 2:
-            sighting = lt.getElement(sightings_list, 1)
+            j += 1
+        i += 1
+    i = nrange
+    while lt.size(sample) >= 3 and lt.size(sample) < 6 and 0 < i:
+        key = lt.getElement(key_list, i)
+        entry = om.get(tree_req2, key)
+        zz_tree = me.getValue(entry)
+        sightings_list = om.valueSet(zz_tree)
+        j = 1
+        while lt.size(sample) < 6 and j <= lt.size(sightings_list):
+            sighting = lt.getElement(sightings_list, j)
             lt.addLast(sample, sighting)
-            sighting = lt.getElement(sightings_list, 2)
-            lt.addLast(sample, sighting)
-            second = om.select(tree_req2, 1)
-            entry_second = om.get(tree_req2, second)
-            zz_tree_second = me.getValue(entry_second)
-            sightings_list = om.valueSet(zz_tree_second)
-            sighting = lt.getElement(sightings_list, 1)
-            lt.addLast(sample, sighting)
-            break
-        else:
-            for i in [1, 2, 3]:
-                sighting = lt.getElement(sightings_list, i)
-                lt.addLast(sample, sighting)
-            break
-    while lt.size(sample) <= 6:
-        sightings_list = om.valueSet(zz_tree_max)
-        if lt.size(sightings_list) == 1:
-            sighting = lt.getElement(sightings_list, 1)
-            lt.addLast(sample, sighting)
-            second_to_last = om.select(tree_req2, total_durations-2)
-            entry_second = om.get(tree_req2, second_to_last)
-            zz_tree_second = me.getValue(entry_second)
-            sightings_list = om.valueSet(zz_tree_second)
-            if lt.size(sightings_list) == 1:
-                sighting = lt.getElement(sightings_list, 1)
-                lt.addLast(sample, sighting)
-                third_to_last = om.select(tree_req2, total_durations-3)
-                entry_third = om.get(tree_req2, third_to_last)
-                zz_tree_third = me.getValue(entry_third)
-                key_3 = om.minKey(zz_tree_third)
-                entry3 = om.get(zz_tree_third, key_3)
-                sighting = me.getValue(entry3)
-                lt.addLast(sample, sighting)
-                break
-            else:  # Size of second is at least 2
-                sighting2 = lt.getElement(sightings_list, 1)
-                sighting3 = lt.getElement(sightings_list, 2)
-                lt.addLast(sample, sighting2)
-                lt.addLast(sample, sighting3)
-                break
-        elif lt.size(sightings_list) == 2:
-            sighting = lt.getElement(sightings_list, 1)
-            lt.addLast(sample, sighting)
-            sighting = lt.getElement(sightings_list, 2)
-            lt.addLast(sample, sighting)
-            second_to_last = om.select(tree_req2, total_durations-2)
-            entry_second = om.get(tree_req2, second_to_last)
-            zz_tree_second = me.getValue(entry_second)
-            sightings_list = om.valueSet(zz_tree_second)
-            sighting = lt.getElement(sightings_list, 1)
-            lt.addLast(sample, sighting)
-            break
-        else:
-            for i in [1, 2, 3]:
-                sighting = lt.getElement(sightings_list, i)
-                lt.addLast(sample, sighting)
-            break
-    return total_durations, top_duration, count_top_duration, sample
+            j += 1
+        i -= 1
+    return total_durations, top_duration, count_top_duration, nrange, sample
 
 
 # Requirement 3
