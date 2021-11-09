@@ -44,6 +44,8 @@ def new_catalog():
                                 comparefunction=compare_keys)
     catalog['req2'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_durations)
+    catalog['req3'] = om.newMap(omaptype='RBT',
+                                comparefunction=compare_hours)
     catalog['req4'] = om.newMap(omaptype='RBT',
                                 comparefunction=compareTime)
 
@@ -285,6 +287,23 @@ def compareTime(sighting1, sighting2):
                                   '%Y-%m-%d').date()
     datetime2 = datetime.strptime(sighting2,
                                   '%Y-%m-%d').date()
+    # print(datetime1)
+    if datetime1 == datetime2:
+        return 0
+    elif datetime1 > datetime2:
+        return 1
+    else:
+        return -1
+
+def compare_hours(sighting1, sighting2):
+    """
+    Compara dos horas en el formato 
+    usando la libreria Datetime.
+    """
+    datetime1 = datetime.strptime(sighting1,
+                              '%Y-%m-%d %H:%M:%S').time()
+    datetime2 = datetime.strptime(sighting2,
+                              '%Y-%m-%d %H:%M:%S').time()
     # print(datetime1)
     if datetime1 == datetime2:
         return 0
