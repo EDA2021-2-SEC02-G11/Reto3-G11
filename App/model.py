@@ -59,6 +59,7 @@ def add_sighting(catalog, sighting):
     lt.addLast(catalog['sightings'], sighting)  # Load data
     create_tree_req1(catalog['req1'], sighting)  # Requirement 1
     create_tree_req2(catalog['req2'], sighting)  # Requirement 2
+    create_tree_req3(catalog['req3'], sighting)  # Requirement 4
     create_tree_req4(catalog['req4'], sighting)  # Requirement 4
     return catalog
 
@@ -173,8 +174,20 @@ def requirement2(catalog, sec_min, sec_max):
 
 
 def create_tree_req3(tree, sighting):
-    pass
-
+    """
+    Crea el árbol del requisito 4.
+    El árbol tiene como llaves las horas de avistamientos y como valores
+    arreglos con los avistamientos por fecha en una lista.
+    """
+    time=sighting["datetime"]
+    entry = om.get(tree, time)
+    if entry is None:
+        sightings_list = lt.newList('ARRAY_LIST')
+    else:
+        sightings_list = me.getValue(entry)
+    lt.addLast(sightings_list, sighting)
+    om.put(tree, time, sightings_list)
+    return tree
 
 def requirement3():
     pass
