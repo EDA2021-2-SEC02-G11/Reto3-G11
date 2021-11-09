@@ -120,9 +120,10 @@ def print_req2(catalog):
     print('\n--------------------Requirement 2: Answer--------------------\n')
     print('There are '+str(total_durations)+' different durations of UFO ' +
           'sightings in total.\n')
-    print('The longest UFO sighting recorded lasts for '+str(top_duration) +
-          ' s. There are '+str(count_top)+' UFO sightings that last ' +
-          'that long.\n')
+    print('The longest UFO sightings recorded are:')
+    table1 = PrettyTable(['Duración (s)', 'Cantidad'])
+    table1.add_row([str(top_duration), str(count_top)])
+    print(table1)
 
 
 def print_req3(catalog):
