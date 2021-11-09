@@ -113,9 +113,9 @@ def print_req2(catalog):
     sec_min = input('Ingrese un límite inferior en segundos: ')
     sec_max = input('Ingrese un límite superior en segundos: ')
     r2 = controller.requirement2(catalog, sec_min, sec_max)
-    total_durations, top_duration, count_top = r2
+    total_durations, top_duration, count_top, sample = r2
     print('\n--------------------Requirement 2: Inputs--------------------\n')
-    print('UFO sightings with durations bewteen '+str(float(sec_min))+' s ' +
+    print('UFO sightings with duration between '+str(float(sec_min))+' s ' +
           'and '+str(float(sec_max))+' s.\n')
     print('\n--------------------Requirement 2: Answer--------------------\n')
     print('There are '+str(total_durations)+' different durations of UFO ' +
@@ -124,6 +124,18 @@ def print_req2(catalog):
     table1 = PrettyTable(['Duración (s)', 'Cantidad'])
     table1.add_row([str(top_duration), str(count_top)])
     print(table1)
+    print('\nInformation regarding the first and last three UFO sightings ' +
+          'with duration bewteen '+str(float(sec_min))+' s '+'and ' +
+          str(float(sec_max))+' s ordered by length:')
+    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
+                        'Forma'])
+    for i in 1, 2, 3, 4, 5, 6:
+        table.add_row([lt.getElement(sample, i)['datetime'],
+                      lt.getElement(sample, i)['city'],
+                      lt.getElement(sample, i)['country'],
+                      lt.getElement(sample, i)['duration (seconds)'],
+                      lt.getElement(sample, i)['shape']])
+    print(table)
 
 
 def print_req3(catalog):
