@@ -232,7 +232,7 @@ def print_req5(catalog):
           'that took place within the longitude range ['+lon_min+', '+lon_max +
           '] and the latitude range ['+lat_min+', '+lat_max+'].')
     table = PrettyTable(['Date', 'Time', 'City', 'Country',
-                         'Duration (s)', 'Shape', 'Longitude', 'Latitude'])
+                         'Duration (s)', 'Shape', 'Latitude', 'Longitude'])
     for i in range(1, lt.size(sample)+1):
         table.add_row([lt.getElement(sample, i)['datetime'][:10],
                       lt.getElement(sample, i)['datetime'][11:],
@@ -240,8 +240,8 @@ def print_req5(catalog):
                       lt.getElement(sample, i)['country'].title(),
                       lt.getElement(sample, i)['duration (seconds)'],
                       lt.getElement(sample, i)['shape'],
-                      float(lt.getElement(sample, i)['longitude']),
-                      float(lt.getElement(sample, i)['latitude'])])
+                      float(lt.getElement(sample, i)['latitude']),
+                      float(lt.getElement(sample, i)['longitude'])])
     print(table)
 
 

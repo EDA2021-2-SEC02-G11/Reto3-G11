@@ -329,30 +329,30 @@ def requirement4(catalog, fechaMin, fechaMax):
 def create_tree_req5(tree_req5, sighting):
     """
     Crea el árbol del requisito 5.
-    El árbol tiene como llaves la coordenada longitud (aproximada a dos cifras
+    El árbol tiene como llaves la coordenada latitud (aproximada a dos cifras
     decimales) y como valores árboles. Cada árbol tiene como llaves
-    coordenadas de latitud (aproximadas a dos cifras decimales) y como valores
-    arreglos con todos los avistamientos que tomaron lugar en la longitud y
-    latitud dada.
+    coordenadas de longitud (aproximadas a dos cifras decimales) y como valores
+    arreglos con todos los avistamientos que tomaron lugar en la latitud y
+    longitud dada.
     Nótese que en los datos ocurre que ocurrieron en exactamente la misma
     latitud y longitud.
     """
-    entry = om.get(tree_req5, rf(sighting['longitude']))
+    entry = om.get(tree_req5, rf(sighting['latitude']))
     if entry is None:
-        lat_tree = om.newMap(omaptype='RBT', comparefunction=compare_keys)
+        long_tree = om.newMap(omaptype='RBT', comparefunction=compare_keys)
         sightings_list = lt.newList(datastructure='ARRAY_LIST')
         lt.addLast(sightings_list, sighting)
-        om.put(lat_tree, rf(sighting['latitude']), sightings_list)
-        om.put(tree_req5, rf(sighting['longitude']), lat_tree)
+        om.put(long_tree, rf(sighting['longitude']), sightings_list)
+        om.put(tree_req5, rf(sighting['latitude']), long_tree)
     else:
-        lat_tree = me.getValue(entry)
-        lat_tree_entry = om.get(lat_tree, rf(sighting['latitude']))
-        if lat_tree_entry is None:
+        long_tree = me.getValue(entry)
+        long_tree_entry = om.get(long_tree, rf(sighting['longitude']))
+        if long_tree_entry is None:
             sightings_list = lt.newList(datastructure='ARRAY_LIST')
             lt.addLast(sightings_list, sighting)
-            om.put(lat_tree, rf(sighting['latitude']), sightings_list)
+            om.put(long_tree, rf(sighting['longitude']), sightings_list)
         else:
-            lt.addLast(me.getValue(lat_tree_entry), sighting)
+            lt.addLast(me.getValue(long_tree_entry), sighting)
     return tree_req5
 
 
@@ -367,18 +367,18 @@ def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
     tree_req5 = catalog['req5']
     sample = lt.newList(datastructure='ARRAY_LIST')
     n_range = 0
-    range_lon = om.values(tree_req5, lon_min, lon_max)
+    range_lat = om.values(tree_req5, lat_min, lat_max)
 
     """ Este ciclo añade los cinco primeros avistamientos. Nótese que el ciclo
     corre como máximo cinco veces."""
     i1 = 1
-    while lt.size(sample) < 5 and i1 <= lt.size(range_lon):
-        lat_tree = lt.getElement(range_lon, i1)
-        values_lat_tree = om.values(lat_tree, lat_min, lat_max)
+    while lt.size(sample) < 5 and i1 <= lt.size(range_lat):
+        lon_tree = lt.getElement(range_lat, i1)
+        values_lon_tree = om.values(lon_tree, lon_min, lon_max)
         i1 += 1
         j1 = 1
-        while lt.size(sample) < 5 and j1 <= lt.size(values_lat_tree):
-            sightings_list = lt.getElement(values_lat_tree, j1)
+        while lt.size(sample) < 5 and j1 <= lt.size(values_lon_tree):
+            sightings_list = lt.getElement(values_lon_tree, j1)
             j1 += 1
             k1 = 1
             while lt.size(sample) < 5 and k1 <= lt.size(sightings_list):
@@ -388,14 +388,14 @@ def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
 
     """ Este ciclo añade los cinco últimos avistamientos. Nótese que, al igual
     que el ciclo anterior, corre máximo cinco veces."""
-    i2 = lt.size(range_lon)
+    i2 = lt.size(range_lat)
     while lt.size(sample) >= 5 and lt.size(sample) < 10 and i2 >= i1:
-        lat_tree = lt.getElement(range_lon, i2)
-        values_lat_tree = om.values(lat_tree, lat_min, lat_max)
+        lon_tree = lt.getElement(range_lat, i2)
+        values_lon_tree = om.values(lon_tree, lon_min, lon_max)
         i2 -= 1
-        j2 = lt.size(values_lat_tree)
+        j2 = lt.size(values_lon_tree)
         while lt.size(sample) >= 5 and lt.size(sample) < 10 and j2 >= 1:
-            sightings_list = lt.getElement(values_lat_tree, j2)
+            sightings_list = lt.getElement(values_lon_tree, j2)
             j2 -= 1
             k2 = lt.size(sightings_list)
             while lt.size(sample) >= 5 and lt.size(sample) < 10 and k2 >= 1:
@@ -405,8 +405,8 @@ def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
 
     """ Este último ciclo cuenta el número de avistamientos en el rango. El
     número de veces que corre depende del rango dado."""
-    for lat_tree in lt.iterator(range_lon):
-        for s_list in lt.iterator(om.values(lat_tree, lat_min, lat_max)):
+    for lon_tree in lt.iterator(range_lat):
+        for s_list in lt.iterator(om.values(lon_tree, lon_min, lon_max)):
             n_range += lt.size(s_list)
     return sample, n_range
 
