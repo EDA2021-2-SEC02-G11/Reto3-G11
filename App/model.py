@@ -206,7 +206,7 @@ def create_tree_req3(tree, sighting):
     El árbol tiene como llaves las horas de avistamientos y como valores
     arreglos con los avistamientos por fecha en una lista.
     """
-    time=sighting["datetime"][11:]
+    time = sighting["datetime"][11:]
     entry = om.get(tree, time)
     if entry is None:
         sightings_list = lt.newList('ARRAY_LIST')
@@ -359,15 +359,16 @@ def compareTime(sighting1, sighting2):
     else:
         return -1
 
+
 def compare_hours(sighting1, sighting2):
     """
-    Compara dos horas en el formato 
+    Compara dos horas en el formato
     usando la libreria Datetime.
     """
     datetime1 = datetime.strptime(sighting1,
-                              '%H:%M:%S').time()
+                                  '%H:%M:%S').time()
     datetime2 = datetime.strptime(sighting2,
-                              '%H:%M:%S').time()
+                                  '%H:%M:%S').time()
     # print(datetime1)
     if datetime1 == datetime2:
         return 0

@@ -149,16 +149,17 @@ def print_req3(catalog):
     print('UFO sightings between '+horaMin+' and ' +
           horaMax+'.\n')
     print('\n--------------------Requirement 4: Answer--------------------\n')
-    print('There are '+str(total_dates)+' different UFO sightings  in 24h format ' +
-          '[hh:mm:ss]....\n')
+    print('There are '+str(total_dates)+' different UFO sightings  in 24h ' +
+          'format [hh:mm:ss]....\n')
     print("The latest UFO sightings time is:")
     table = PrettyTable(['time', 'count'])
-    table.add_row([oldest,n_oldest])
+    table.add_row([oldest, n_oldest])
     print(table)
-    print("There are "+str(n_rango)+" sightings between: "+horaMin+" and "+horaMax+"\n")
+    print("There are "+str(n_rango)+" sightings between: "+horaMin+" and " +
+          horaMax+"\n")
     print("The first 3 and last 3 UFO sightings in this time are:")
-    table = PrettyTable(['datetime', 'time', 'city', 'state','country','shape',
-                        'duration (seconds)'])
+    table = PrettyTable(['datetime', 'time', 'city', 'state', 'country',
+                         'shape', 'duration (seconds)'])
     for i in 1, 2, 3, -2, -1, 0:
         table.add_row([lt.getElement(rango, i)['datetime'],
                       lt.getElement(rango, i)['datetime'][11:],
