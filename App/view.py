@@ -141,7 +141,33 @@ def print_req2(catalog):
 
 
 def print_req3(catalog):
-    print('Este requerimiento aún no ha sido implementado.')
+    horaMin = input('Digite la hora minima: ')
+    horaMax = input('Digite la hora maxima: ')
+    r3 = controller.requirement3(catalog, horaMin, horaMax)
+    total_dates, oldest, n_oldest, n_rango, rango = r3
+    print('\n--------------------Requirement 3: Inputs--------------------\n')
+    print('UFO sightings between '+horaMin+' and ' +
+          horaMax+'.\n')
+    print('\n--------------------Requirement 4: Answer--------------------\n')
+    print('There are '+str(total_dates)+' different UFO sightings  in 24h format ' +
+          '[hh:mm:ss]....\n')
+    print("The latest UFO sightings time is:")
+    table = PrettyTable(['time', 'count'])
+    table.add_row([oldest,n_oldest])
+    print(table)
+    print("There are "+str(n_rango)+" sightings between: "+horaMin+" and "+horaMax+"\n")
+    print("The first 3 and last 3 UFO sightings in this time are:")
+    table = PrettyTable(['datetime', 'time', 'city', 'state','country','shape',
+                        'duration (seconds)'])
+    for i in 1, 2, 3, -2, -1, 0:
+        table.add_row([lt.getElement(rango, i)['datetime'],
+                      lt.getElement(rango, i)['datetime'][11:],
+                      lt.getElement(rango, i)['city'],
+                      lt.getElement(rango, i)['state'],
+                      lt.getElement(rango, i)['country'],
+                      lt.getElement(rango, i)['shape'],
+                      lt.getElement(rango, i)['duration (seconds)']])
+    print(table)
 
 
 def print_req4(catalog):
@@ -155,20 +181,24 @@ def print_req4(catalog):
     print('\n--------------------Requirement 4: Answer--------------------\n')
     print('There are '+str(total_dates)+' UFO sightings that occurred ' +
           'on different dates.\n')
-    print('The oldest UFO sighting recorded happened on '+str(oldest) +
-          '. There were '+str(n_oldest)+' UFO sightings on that day.\n')
-    print('There are '+str(n_rango)+' UFO sightings that occurred between ' +
+    print("The oldest UFO sightings date is:")
+    table = PrettyTable(['time', 'count'])
+    table.add_row([oldest, n_oldest])
+    print(table)
+    print('\nThere are '+str(n_rango)+' UFO sightings that occurred between ' +
           fechaMin+' and '+fechaMax+'.\n')
     print('Information regarding the first and last three UFO sightings ' +
           'between '+fechaMin+' and '+fechaMax+' in chronological order:')
-    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
-                        'Forma'])
+    table = PrettyTable(['datetime', 'date', 'city', 'state', 'country',
+                         'shape', 'duration (seconds)'])
     for i in 1, 2, 3, -2, -1, 0:
         table.add_row([lt.getElement(rango, i)['datetime'],
+                      lt.getElement(rango, i)['datetime'][11:],
                       lt.getElement(rango, i)['city'],
+                      lt.getElement(rango, i)['state'],
                       lt.getElement(rango, i)['country'],
-                      lt.getElement(rango, i)['duration (seconds)'],
-                      lt.getElement(rango, i)['shape']])
+                      lt.getElement(rango, i)['shape'],
+                      lt.getElement(rango, i)['duration (seconds)']])
     print(table)
 
 

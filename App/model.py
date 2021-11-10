@@ -44,6 +44,8 @@ def new_catalog():
                                 comparefunction=compare_keys)
     catalog['req2'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_durations)
+    catalog['req3'] = om.newMap(omaptype='RBT',
+                                comparefunction=compare_hours)
     catalog['req4'] = om.newMap(omaptype='RBT',
                                 comparefunction=compareTime)
 
@@ -57,6 +59,7 @@ def add_sighting(catalog, sighting):
     lt.addLast(catalog['sightings'], sighting)  # Load data
     create_tree_req1(catalog['req1'], sighting)  # Requirement 1
     create_tree_req2(catalog['req2'], sighting)  # Requirement 2
+    create_tree_req3(catalog['req3'], sighting)  # Requirement 4
     create_tree_req4(catalog['req4'], sighting)  # Requirement 4
     return catalog
 
@@ -198,11 +201,47 @@ def requirement2(catalog, sec_min, sec_max):
 
 
 def create_tree_req3(tree, sighting):
-    pass
+    """
+    Crea el árbol del requisito 4.
+    El árbol tiene como llaves las horas de avistamientos y como valores
+    arreglos con los avistamientos por fecha en una lista.
+    """
+    time=sighting["datetime"][11:]
+    entry = om.get(tree, time)
+    if entry is None:
+        sightings_list = lt.newList('ARRAY_LIST')
+    else:
+        sightings_list = me.getValue(entry)
+    lt.addLast(sightings_list, sighting)
+    om.put(tree, time, sightings_list)
+    return tree
 
 
-def requirement3():
-    pass
+def requirement3(catalog, horaMin, horaMax):
+    tree_req3 = catalog["req3"]
+    total_dates = om.size(tree_req3)
+    oldest = om.maxKey(tree_req3)
+    entry_oldest = om.get(tree_req3, oldest)
+    oldest_array = me.getValue(entry_oldest)
+    n_oldest = lt.size(oldest_array)
+    range_values = om.values(tree_req3, horaMin, horaMax)
+    rango = lt.newList(datastructure='ARRAY_LIST')
+    n_rango = 0
+    rango_for = lt.size(range_values)
+    for i in range(1, rango_for+1):
+        sightings_array = lt.getElement(range_values, i)
+        if i in (1, 2, 3, rango_for-2, rango_for-1, rango_for):
+            if lt.size(sightings_array) <= 1:
+                sighting = lt.getElement(sightings_array, 1)
+                lt.addLast(rango, sighting)
+                n_rango += lt.size(sightings_array)
+            else:
+                for sighting in lt.iterator(sightings_array):
+                    n_rango += 1
+                    lt.addLast(rango, sighting)
+        else:
+            n_rango += lt.size(sightings_array)
+    return total_dates, oldest, n_oldest, n_rango, rango
 
 
 # Requirement 4
@@ -312,6 +351,23 @@ def compareTime(sighting1, sighting2):
                                   '%Y-%m-%d').date()
     datetime2 = datetime.strptime(sighting2,
                                   '%Y-%m-%d').date()
+    # print(datetime1)
+    if datetime1 == datetime2:
+        return 0
+    elif datetime1 > datetime2:
+        return 1
+    else:
+        return -1
+
+def compare_hours(sighting1, sighting2):
+    """
+    Compara dos horas en el formato 
+    usando la libreria Datetime.
+    """
+    datetime1 = datetime.strptime(sighting1,
+                              '%H:%M:%S').time()
+    datetime2 = datetime.strptime(sighting2,
+                              '%H:%M:%S').time()
     # print(datetime1)
     if datetime1 == datetime2:
         return 0

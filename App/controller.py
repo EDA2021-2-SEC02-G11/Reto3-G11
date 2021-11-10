@@ -46,8 +46,8 @@ def requirement2(catalog, sec_min, sec_max):
     return model.requirement2(catalog, sec_min, sec_max)
 
 
-def requirement3():
-    return model.requirement3()
+def requirement3(catalog, horaMin, horaMax):
+    return model.requirement3(catalog, horaMin, horaMax)
 
 
 def requirement4(catalog, fechaMin, fechaMax):
