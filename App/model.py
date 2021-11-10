@@ -24,7 +24,6 @@
  * Dario Correal - Version inicial
  """
 
-
 import config as cf
 from datetime import datetime
 from DISClib.ADT import list as lt
@@ -136,20 +135,24 @@ def create_tree_req2(tree_req2, sighting):
     """
     entry = om.get(tree_req2, float(sighting['duration (seconds)']))
     if entry is None:
-        countries_cities = om.newMap(omaptype='RBT',
-                                     comparefunction=compare_keys)
-        country_city = country_city_key(sighting)
-        om.put(countries_cities, country_city, sighting)
-        om.put(tree_req2, float(sighting['duration (seconds)']),
-               countries_cities)
+        zz_tree = om.newMap(omaptype='RBT', comparefunction=compare_keys)
+        sightings_list = lt.newList(datastructure='ARRAY_LIST')
+        lt.addLast(sightings_list, sighting)
+        om.put(zz_tree, zz_key(sighting), sightings_list)
+        om.put(tree_req2, float(sighting['duration (seconds)']), zz_tree)
     else:
-        countries_cities = me.getValue(entry)
-        country_city = country_city_key(sighting)
-        om.put(countries_cities, country_city, sighting)
+        zz_tree = me.getValue(entry)
+        zz_tree_entry = om.get(zz_tree, zz_key(sighting))
+        if zz_tree_entry is None:
+            sightings_list = lt.newList(datastructure='ARRAY_LIST')
+            lt.addLast(sightings_list, sighting)
+            om.put(zz_tree, zz_key(sighting), sightings_list)
+        else:
+            lt.addLast(me.getValue(zz_tree_entry), sighting)
     return tree_req2
 
 
-def country_city_key(sighting):
+def zz_key(sighting):
     """
     Retorna una cadena de caracteres con el formato 'ciudad-zz' donde zz
     representa el acrónimo del país, para un avistamiento dado.
@@ -175,40 +178,50 @@ def requirement2(catalog, sec_min, sec_max):
     country_city_tree_top = me.getValue(country_city_entry_top)
     count_top_duration = om.size(country_city_tree_top)
     # Top 3 and last 3
-    sample = lt.newList(datastructure='ARRAY')
-    value_list = om.values(tree_req2, sec_min, sec_max)
-    n_values = lt.size(value_list)
-    nrange = 0
+    sample = lt.newList(datastructure='ARRAY_LIST')
+    n_range = 0
+    range_duration = om.values(tree_req2, sec_min, sec_max)
+
+    """ Este ciclo añade los tres primeros avistamientos. Nótese que el ciclo
+    corre como máximo tres veces."""
     i1 = 1
-    while lt.size(sample) < 3 and i1 <= n_values:
-        zz_tree = lt.getElement(value_list, i1)
-        nrange += om.size(zz_tree)
-        sightings_list = om.valueSet(zz_tree)
+    while lt.size(sample) < 3 and i1 <= lt.size(range_duration):
+        zz_tree = lt.getElement(range_duration, i1)
+        values_zz_tree = om.valueSet(zz_tree)
         i1 += 1
-        j = 1
-        while lt.size(sample) < 3 and j <= lt.size(sightings_list):
-            sighting = lt.getElement(sightings_list, j)
-            lt.addLast(sample, sighting)
-            j += 1
-    i2 = n_values
+        j1 = 1
+        while lt.size(sample) < 3 and j1 <= lt.size(values_zz_tree):
+            sightings_list = lt.getElement(values_zz_tree, j1)
+            j1 += 1
+            k1 = 1
+            while lt.size(sample) < 3 and k1 <= lt.size(sightings_list):
+                sighting = lt.getElement(sightings_list, k1)
+                lt.addLast(sample, sighting)
+                k1 += 1
+
+    """ Este ciclo añade los tres últimos avistamientos. Nótese que, al igual
+    que el ciclo anterior, corre máximo tres veces."""
+    i2 = lt.size(range_duration)
     while lt.size(sample) >= 3 and lt.size(sample) < 6 and i2 >= 1:
-        zz_tree = lt.getElement(value_list, i2)
-        nrange += om.size(zz_tree)
-        sightings_list = om.valueSet(zz_tree)
+        zz_tree = lt.getElement(range_duration, i2)
+        values_zz_tree = om.valueSet(zz_tree)
         i2 -= 1
-        j = lt.size(sightings_list)
-        while lt.size(sample) < 6 and j >= 1:
-            sighting = lt.getElement(sightings_list, j)
-            lt.addLast(sample, sighting)
-            j -= 1
-    while i1 <= i2:
-        zz_tree = lt.getElement(value_list, i1)
-        nrange += om.size(zz_tree)
-        i1 += 1
-    # nrange = 0
-    # for i in lt.iterator(value_list):
-    #     nrange += om.size(i)
-    return total_durations, top_duration, count_top_duration, nrange, sample
+        j2 = lt.size(values_zz_tree)
+        while lt.size(sample) >= 3 and lt.size(sample) < 6 and j2 >= 1:
+            sightings_list = lt.getElement(values_zz_tree, j2)
+            j2 -= 1
+            k2 = lt.size(sightings_list)
+            while lt.size(sample) >= 3 and lt.size(sample) < 6 and k2 >= 1:
+                sighting = lt.getElement(sightings_list, k2)
+                lt.addLast(sample, sighting)
+                k2 -= 1
+
+    """ Este último ciclo cuenta el número de avistamientos en el rango. El
+    número de veces que corre depende del rango dado."""
+    for zz_tree in lt.iterator(range_duration):
+        for sightings_list in lt.iterator(om.valueSet(zz_tree)):
+            n_range += lt.size(sightings_list)
+    return total_durations, top_duration, count_top_duration, n_range, sample
 
 
 # Requirement 3
