@@ -116,7 +116,9 @@ def requirement1(catalog, city):
         entry_sighting = om.get(tree_cities, i)
         sighting = me.getValue(entry_sighting)
         lt.addLast(sample, sighting)
-    return total_cities, total, sample
+    most_city = "ciudad"
+    n_most_city = 666
+    return total_cities, total, sample, most_city, n_most_city
 
 
 # Requirement 2
@@ -177,6 +179,7 @@ def requirement2(catalog, sec_min, sec_max):
     country_city_entry_top = om.get(tree_req2, top_duration)
     country_city_tree_top = me.getValue(country_city_entry_top)
     count_top_duration = om.size(country_city_tree_top)
+
     # Top 3 and last 3
     sample = lt.newList(datastructure='ARRAY_LIST')
     n_range = 0
