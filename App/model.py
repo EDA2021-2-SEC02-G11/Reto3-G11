@@ -42,15 +42,15 @@ def new_catalog():
 
     catalog['sightings'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['req1'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare)
+                                comparefunction=compare_keys)
     catalog['req2'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare)
+                                comparefunction=compare_keys)
     catalog['req3'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_hours)
     catalog['req4'] = om.newMap(omaptype='RBT',
                                 comparefunction=compareTime)
     catalog['req5'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare)
+                                comparefunction=compare_keys)
 
     return catalog
 
@@ -84,7 +84,7 @@ def create_tree_req1(tree_req1, sighting):
     entry = om.get(tree_req1, sighting['city'])
     if entry is None:
         dates = om.newMap(omaptype='RBT',
-                          comparefunction=compare)
+                          comparefunction=compare_keys)
         date = datetime.strptime(sighting['datetime'],
                                  '%Y-%m-%d %H:%M:%S')
         om.put(dates, date, sighting)
@@ -137,7 +137,7 @@ def create_tree_req2(tree_req2, sighting):
     entry = om.get(tree_req2, float(sighting['duration (seconds)']))
     if entry is None:
         countries_cities = om.newMap(omaptype='RBT',
-                                     comparefunction=compare)
+                                     comparefunction=compare_keys)
         country_city = country_city_key(sighting)
         om.put(countries_cities, country_city, sighting)
         om.put(tree_req2, float(sighting['duration (seconds)']),
@@ -341,7 +341,21 @@ def order(catalog):
 
 
 def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
-    return catalog, lon_min, lon_max, lat_min, lat_max
+    tree_req5 = catalog['req5']
+    value_list = om.values(tree_req5, lon_min, lon_max)
+    n_values = lt.size(value_list)
+    sample = lt.newList(datastructure='ARRAY_LIST')
+    # for i in range(1, n_values+1):
+    #     sightings_list = lt.getElement(value_list, i)
+    #     if i in list(range(1, 6)):
+    #         if lt.size(sample) < 10:
+    #             sighting =
+    #             lt.addLast(sample, sighting)
+    #     elif i in list(range(n_values-4, n_values+1)):
+    #         if lt.size(sample) < 10:
+    sample = value_list
+    n_sightings = n_values
+    return sample, n_sightings
 
 
 # Requirement 6
@@ -358,7 +372,7 @@ def requirement6():
 # Comparing functions
 
 
-def compare(key1, key2):
+def compare_keys(key1, key2):
     """
     Compara dos cosas cualquiera.
     """
@@ -409,4 +423,4 @@ def compare_hours(sighting1, sighting2):
 def compare_latitude(sighting1, sighting2):
     latitud1 = round(float(sighting1["latitude"]), 2)
     latitud2 = round(float(sighting2["latitude"]), 2)
-    return compare(latitud1, latitud2)
+    return compare_keys(latitud1, latitud2)

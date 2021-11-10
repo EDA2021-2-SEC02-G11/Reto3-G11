@@ -204,12 +204,34 @@ def print_req4(catalog):
 
 
 def print_req5(catalog):
-    lon_min = float(input('Ingrese un límite inferior de longitud: '))
     lon_max = float(input('Ingrese un límite superior de longitud: '))
+    lon_min = float(input('Ingrese un límite inferior de longitud: '))
     lat_min = float(input('Ingrese un límite inferior de latitud: '))
     lat_max = float(input('Ingrese un límite superior de latitud: '))
     r5 = controller.requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
-    print('Este requerimiento aún no ha sido implementado.')
+    sample, n_sightings = r5
+    print('\n--------------------Requirement 5: Inputs--------------------\n')
+    print('UFO sightings that occured within longitude range of ['+lon_min +
+          ', '+lon_max+'] and latitude range of ['+lat_min+', '+lat_max +
+          '].\n')
+    print('\n--------------------Requirement 5: Answer--------------------\n')
+    print('There are '+str(n_sightings)+' UFO sightings that took place ' +
+          'within the longitude range ['+lon_min+', '+lon_max+'] and the ' +
+          'latitude range ['+lat_min+', '+lat_max+'].\n')
+    print('Information regarding the first and last five UFO sightings ' +
+          'that took place within the longitude range ['+lon_min+', '+lon_max +
+          '] and the latitude range ['+lat_min+', '+lat_max+'].')
+    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
+                        'Forma', 'Longitud', 'Latitud'])
+    for i in 1, 2, 3, 6, 5, 4:
+        table.add_row([lt.getElement(sample, i)['datetime'],
+                      lt.getElement(sample, i)['city'],
+                      lt.getElement(sample, i)['country'],
+                      lt.getElement(sample, i)['duration (seconds)'],
+                      lt.getElement(sample, i)['shape'],
+                      round(float(lt.getElement(sample, i)['longitude']), 2),
+                      round(float(lt.getElement(sample, i)['latitude']), 2)])
+    print(table)
 
 
 def print_req6(catalog):
