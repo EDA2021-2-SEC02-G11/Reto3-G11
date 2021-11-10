@@ -30,6 +30,7 @@ from datetime import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Sorting import mergesort as mer
 assert cf
 
 
@@ -41,13 +42,15 @@ def new_catalog():
 
     catalog['sightings'] = lt.newList(datastructure='ARRAY_LIST')
     catalog['req1'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare_keys)
+                                comparefunction=compare)
     catalog['req2'] = om.newMap(omaptype='RBT',
-                                comparefunction=compare_durations)
+                                comparefunction=compare)
     catalog['req3'] = om.newMap(omaptype='RBT',
                                 comparefunction=compare_hours)
     catalog['req4'] = om.newMap(omaptype='RBT',
                                 comparefunction=compareTime)
+    catalog['req5'] = om.newMap(omaptype='RBT',
+                                comparefunction=compare)
 
     return catalog
 
@@ -59,8 +62,9 @@ def add_sighting(catalog, sighting):
     lt.addLast(catalog['sightings'], sighting)  # Load data
     create_tree_req1(catalog['req1'], sighting)  # Requirement 1
     create_tree_req2(catalog['req2'], sighting)  # Requirement 2
-    create_tree_req3(catalog['req3'], sighting)  # Requirement 4
+    create_tree_req3(catalog['req3'], sighting)  # Requirement 3
     create_tree_req4(catalog['req4'], sighting)  # Requirement 4
+    create_tree_req5(catalog['req5'], sighting)  # Requirement 5
     return catalog
 
 
@@ -80,7 +84,7 @@ def create_tree_req1(tree_req1, sighting):
     entry = om.get(tree_req1, sighting['city'])
     if entry is None:
         dates = om.newMap(omaptype='RBT',
-                          comparefunction=compare_keys)
+                          comparefunction=compare)
         date = datetime.strptime(sighting['datetime'],
                                  '%Y-%m-%d %H:%M:%S')
         om.put(dates, date, sighting)
@@ -133,7 +137,7 @@ def create_tree_req2(tree_req2, sighting):
     entry = om.get(tree_req2, float(sighting['duration (seconds)']))
     if entry is None:
         countries_cities = om.newMap(omaptype='RBT',
-                                     comparefunction=compare_keys)
+                                     comparefunction=compare)
         country_city = country_city_key(sighting)
         om.put(countries_cities, country_city, sighting)
         om.put(tree_req2, float(sighting['duration (seconds)']),
@@ -172,27 +176,23 @@ def requirement2(catalog, sec_min, sec_max):
     count_top_duration = om.size(country_city_tree_top)
     # Top 3 and last 3
     sample = lt.newList(datastructure='ARRAY')
-    key_list = om.keys(tree_req2, float(sec_min), float(sec_max))
-    nkey = lt.size(key_list)
+    value_list = om.values(tree_req2, sec_min, sec_max)
+    n_values = lt.size(value_list)
     nrange = 0
     i1 = 1
-    while lt.size(sample) < 3 and i1 <= nkey:
-        key = lt.getElement(key_list, i1)
-        entry = om.get(tree_req2, key)
-        zz_tree = me.getValue(entry)
-        sightings_list = om.valueSet(zz_tree)
+    while lt.size(sample) < 3 and i1 <= n_values:
+        zz_tree = lt.getElement(value_list, i1)
         nrange += om.size(zz_tree)
+        sightings_list = om.valueSet(zz_tree)
         i1 += 1
         j = 1
         while lt.size(sample) < 3 and j <= lt.size(sightings_list):
             sighting = lt.getElement(sightings_list, j)
             lt.addLast(sample, sighting)
             j += 1
-    i2 = nkey
+    i2 = n_values
     while lt.size(sample) >= 3 and lt.size(sample) < 6 and i2 >= 1:
-        key = lt.getElement(key_list, i2)
-        entry = om.get(tree_req2, key)
-        zz_tree = me.getValue(entry)
+        zz_tree = lt.getElement(value_list, i2)
         nrange += om.size(zz_tree)
         sightings_list = om.valueSet(zz_tree)
         i2 -= 1
@@ -202,17 +202,12 @@ def requirement2(catalog, sec_min, sec_max):
             lt.addLast(sample, sighting)
             j -= 1
     while i1 <= i2:
-        key = lt.getElement(key_list, i1)
-        entry = om.get(tree_req2, key)
-        zz_tree = me.getValue(entry)
+        zz_tree = lt.getElement(value_list, i1)
         nrange += om.size(zz_tree)
         i1 += 1
-
-    nrange = 0
-    for i in lt.iterator(key_list):
-        entry = om.get(tree_req2, i)
-        zz_tree = me.getValue(entry)
-        nrange += om.size(zz_tree)
+    # nrange = 0
+    # for i in lt.iterator(value_list):
+    #     nrange += om.size(i)
     return total_durations, top_duration, count_top_duration, nrange, sample
 
 
@@ -317,11 +312,36 @@ def requirement4(catalog, fechaMin, fechaMax):
 
 
 def create_tree_req5(tree, sighting):
-    pass
+    """
+    Crea el árbol del requisito 5.
+    El árbol tiene como llaves la coordenada longitud (aproximada a dos cifras
+    decimales) y como valores arreglos con los avistamientos que tienen
+    dicha longitud. Los avistamientos al interior de cada arreglo están
+    ordenados por la coordenada latitud (aproximada a dos cifras decimales).
+    """
+    longitud = round(float(sighting["longitude"]), 2)
+    entry = om.get(tree, longitud)
+    if entry is None:
+        sightings_list = lt.newList('ARRAY_LIST')
+    else:
+        sightings_list = me.getValue(entry)
+    lt.addLast(sightings_list, sighting)
+    om.put(tree, longitud, sightings_list)
+    return tree
 
 
-def requirement5():
-    pass
+def order(catalog):
+    tree_req5 = catalog['req5']
+    key_list = om.keySet(tree_req5)
+    for key in lt.iterator(key_list):
+        entry = om.get(tree_req5, key)
+        sightings_list = me.getValue(entry)
+        sorted_list = mer.sort(sightings_list, compare_latitude)
+        om.put(tree_req5, key, sorted_list)
+
+
+def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
+    return catalog, lon_min, lon_max, lat_min, lat_max
 
 
 # Requirement 6
@@ -335,27 +355,13 @@ def requirement6():
     pass
 
 
-# Compare functions
+# Comparing functions
 
 
-def compare_keys(key1, key2):
+def compare(key1, key2):
     """
-    Compara dos elementos cualquiera.
+    Compara dos cosas cualquiera.
     """
-    if key1 == key2:
-        return 0
-    elif key1 > key2:
-        return 1
-    else:
-        return -1
-
-
-def compare_durations(duration1, duration2):
-    """
-    Compara dos duraciones que entran como cadenas de caracteres.
-    """
-    key1 = float(duration1)
-    key2 = float(duration2)
     if key1 == key2:
         return 0
     elif key1 > key2:
@@ -398,3 +404,9 @@ def compare_hours(sighting1, sighting2):
         return 1
     else:
         return -1
+
+
+def compare_latitude(sighting1, sighting2):
+    latitud1 = round(float(sighting1["latitude"]), 2)
+    latitud2 = round(float(sighting2["latitude"]), 2)
+    return compare(latitud1, latitud2)

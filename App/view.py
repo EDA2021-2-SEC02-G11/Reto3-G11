@@ -110,13 +110,13 @@ def print_req1(catalog):
 
 
 def print_req2(catalog):
-    sec_min = input('Ingrese un límite inferior en segundos: ')
-    sec_max = input('Ingrese un límite superior en segundos: ')
+    sec_min = float(input('Ingrese un límite inferior en segundos: '))
+    sec_max = float(input('Ingrese un límite superior en segundos: '))
     r2 = controller.requirement2(catalog, sec_min, sec_max)
     total_durations, top_duration, count_top, nrange, sample = r2
     print('\n--------------------Requirement 2: Inputs--------------------\n')
-    print('UFO sightings with duration between '+str(float(sec_min))+' s ' +
-          'and '+str(float(sec_max))+' s.\n')
+    print('UFO sightings with duration between '+str(sec_min)+' s ' +
+          'and '+str(sec_max)+' s.\n')
     print('\n--------------------Requirement 2: Answer--------------------\n')
     print('There are '+str(total_durations)+' different durations of UFO ' +
           'sightings in total.\n')
@@ -125,8 +125,8 @@ def print_req2(catalog):
     table1.add_row([str(top_duration), str(count_top)])
     print(table1)
     print('\nThere are '+str(nrange)+' UFO sightings ' +
-          'with duration bewteen '+str(float(sec_min))+' s '+'and ' +
-          str(float(sec_max))+' s.')
+          'with duration bewteen '+str(sec_min)+' s '+'and ' +
+          str(sec_max)+' s.')
     print('\nInformation regarding the first and last three of said UFO ' +
           'sightings, ordered by length:')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
@@ -204,6 +204,11 @@ def print_req4(catalog):
 
 
 def print_req5(catalog):
+    lon_min = float(input('Ingrese un límite inferior de longitud: '))
+    lon_max = float(input('Ingrese un límite superior de longitud: '))
+    lat_min = float(input('Ingrese un límite inferior de latitud: '))
+    lat_max = float(input('Ingrese un límite superior de latitud: '))
+    r5 = controller.requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
     print('Este requerimiento aún no ha sido implementado.')
 
 

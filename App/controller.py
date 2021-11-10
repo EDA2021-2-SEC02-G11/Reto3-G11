@@ -36,6 +36,7 @@ def load_data(catalog):
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for sighting in input_file:
         model.add_sighting(catalog, sighting)
+    model.order(catalog)
 
 
 def requirement1(catalog, city):
@@ -54,8 +55,8 @@ def requirement4(catalog, fechaMin, fechaMax):
     return model.requirement4(catalog, fechaMin, fechaMax)
 
 
-def requirement5():
-    return model.requirement5()
+def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
+    return model.requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
 
 
 def requirement6():
