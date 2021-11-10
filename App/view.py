@@ -124,9 +124,9 @@ def print_req2(catalog):
     table1 = PrettyTable(['Duración (s)', 'Cantidad'])
     table1.add_row([str(top_duration), str(count_top)])
     print(table1)
-    print('\nThere are '+str(nrange)+' UFO sightings' +
+    print('\nThere are '+str(nrange)+' UFO sightings ' +
           'with duration bewteen '+str(float(sec_min))+' s '+'and ' +
-          str(float(sec_max))+' s ordered by length:')
+          str(float(sec_max))+' s.')
     print('\nInformation regarding the first and last three of said UFO ' +
           'sightings, ordered by length:')
     table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',

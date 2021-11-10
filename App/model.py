@@ -52,7 +52,7 @@ def new_catalog():
     return catalog
 
 
-# Funciones para agregar información al catalogo
+# Funciones para agregar información al catálogo
 
 
 def add_sighting(catalog, sighting):
@@ -123,20 +123,21 @@ def create_tree_req2(tree_req2, sighting):
     """
     Crea el árbol del requisito 2.
     El árbol tiene como llaves duraciones en segundos y como valores árboles.
-    Cada árbol tiene como llaves cadenas de caracteres de forma 'zz-ciudad',
+    Cada árbol tiene como llaves cadenas de caracteres de forma 'ciudad-zz',
     donde zz representa el acrónimo del país, y como valores arreglos con todos
     los avistamientos de dicha duración en segundos que ocurrieron en el país y
     ciudad dados. Para los que no tienen país se pone 'zz'.
     Nótese que en los datos ocurre que hay varios avistamientos con igual
     duración en segundos que ocurrieron en la misma ciudad.
     """
-    entry = om.get(tree_req2, sighting['duration (seconds)'])
+    entry = om.get(tree_req2, float(sighting['duration (seconds)']))
     if entry is None:
         countries_cities = om.newMap(omaptype='RBT',
                                      comparefunction=compare_keys)
         country_city = country_city_key(sighting)
         om.put(countries_cities, country_city, sighting)
-        om.put(tree_req2, sighting['duration (seconds)'], countries_cities)
+        om.put(tree_req2, float(sighting['duration (seconds)']),
+               countries_cities)
     else:
         countries_cities = me.getValue(entry)
         country_city = country_city_key(sighting)
@@ -146,7 +147,7 @@ def create_tree_req2(tree_req2, sighting):
 
 def country_city_key(sighting):
     """
-    Retorna una cadena de caracteres con el formato 'zz-ciudad' donde zz
+    Retorna una cadena de caracteres con el formato 'ciudad-zz' donde zz
     representa el acrónimo del país, para un avistamiento dado.
     Para los que no tienen país se pone 'zz' como acrónimo del país.
     """
@@ -154,11 +155,14 @@ def country_city_key(sighting):
     if country == '':
         country = 'zz'
     city = sighting['city'].strip()
-    llave = country+'-'+city
+    llave = city+'-'+country
     return llave
 
 
 def requirement2(catalog, sec_min, sec_max):
+    """
+    Arma la respuesta del requisito 2 usando el árbol del requisito 2.
+    """
     # Longest sightings
     tree_req2 = catalog['req2']
     total_durations = om.size(tree_req2)
@@ -168,32 +172,47 @@ def requirement2(catalog, sec_min, sec_max):
     count_top_duration = om.size(country_city_tree_top)
     # Top 3 and last 3
     sample = lt.newList(datastructure='ARRAY')
-    key_list = om.keys(tree_req2, sec_min, sec_max)
-    nrange = lt.size(key_list)
-    i = 1
-    while lt.size(sample) < 3 and i <= nrange:
-        key = lt.getElement(key_list, i)
+    key_list = om.keys(tree_req2, float(sec_min), float(sec_max))
+    nkey = lt.size(key_list)
+    nrange = 0
+    i1 = 1
+    while lt.size(sample) < 3 and i1 <= nkey:
+        key = lt.getElement(key_list, i1)
         entry = om.get(tree_req2, key)
         zz_tree = me.getValue(entry)
         sightings_list = om.valueSet(zz_tree)
+        nrange += om.size(zz_tree)
+        i1 += 1
         j = 1
         while lt.size(sample) < 3 and j <= lt.size(sightings_list):
             sighting = lt.getElement(sightings_list, j)
             lt.addLast(sample, sighting)
             j += 1
-        i += 1
-    i = nrange
-    while lt.size(sample) >= 3 and lt.size(sample) < 6 and 0 < i:
-        key = lt.getElement(key_list, i)
+    i2 = nkey
+    while lt.size(sample) >= 3 and lt.size(sample) < 6 and i2 >= 1:
+        key = lt.getElement(key_list, i2)
         entry = om.get(tree_req2, key)
         zz_tree = me.getValue(entry)
+        nrange += om.size(zz_tree)
         sightings_list = om.valueSet(zz_tree)
-        j = 1
-        while lt.size(sample) < 6 and j <= lt.size(sightings_list):
+        i2 -= 1
+        j = lt.size(sightings_list)
+        while lt.size(sample) < 6 and j >= 1:
             sighting = lt.getElement(sightings_list, j)
             lt.addLast(sample, sighting)
-            j += 1
-        i -= 1
+            j -= 1
+    while i1 <= i2:
+        key = lt.getElement(key_list, i1)
+        entry = om.get(tree_req2, key)
+        zz_tree = me.getValue(entry)
+        nrange += om.size(zz_tree)
+        i1 += 1
+
+    nrange = 0
+    for i in lt.iterator(key_list):
+        entry = om.get(tree_req2, i)
+        zz_tree = me.getValue(entry)
+        nrange += om.size(zz_tree)
     return total_durations, top_duration, count_top_duration, nrange, sample
 
 
@@ -202,7 +221,7 @@ def requirement2(catalog, sec_min, sec_max):
 
 def create_tree_req3(tree, sighting):
     """
-    Crea el árbol del requisito 4.
+    Crea el árbol del requisito 3.
     El árbol tiene como llaves las horas de avistamientos y como valores
     arreglos con los avistamientos por fecha en una lista.
     """
@@ -218,6 +237,9 @@ def create_tree_req3(tree, sighting):
 
 
 def requirement3(catalog, horaMin, horaMax):
+    """
+    Arma la respuesta del requisito 3 usando el árbol del requisito 3.
+    """
     tree_req3 = catalog["req3"]
     total_dates = om.size(tree_req3)
     oldest = om.maxKey(tree_req3)
