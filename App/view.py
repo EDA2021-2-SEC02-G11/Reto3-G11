@@ -216,6 +216,10 @@ def print_req5(catalog):
     lat_max = float(input('Ingrese un límite superior de latitud: '))
     r5 = controller.requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
     sample, n_sightings = r5
+    lon_max = str(round(lon_max, 2))
+    lon_min = str(round(lon_min, 2))
+    lat_min = str(round(lat_min, 2))
+    lat_max = str(round(lat_max, 2))
     print('\n--------------------Requirement 5: Inputs--------------------\n')
     print('UFO sightings that occured within longitude range of ['+lon_min +
           ', '+lon_max+'] and latitude range of ['+lat_min+', '+lat_max +
@@ -227,16 +231,17 @@ def print_req5(catalog):
     print('Information regarding the first and last five UFO sightings ' +
           'that took place within the longitude range ['+lon_min+', '+lon_max +
           '] and the latitude range ['+lat_min+', '+lat_max+'].')
-    table = PrettyTable(['Fecha y hora', 'Ciudad', 'País', 'Duración (s)',
-                        'Forma', 'Longitud', 'Latitud'])
-    for i in 1, 2, 3, 6, 5, 4:
-        table.add_row([lt.getElement(sample, i)['datetime'],
-                      lt.getElement(sample, i)['city'],
-                      lt.getElement(sample, i)['country'],
+    table = PrettyTable(['Date', 'Time', 'City', 'Country',
+                         'Duration (s)', 'Shape', 'Longitude', 'Latitude'])
+    for i in range(1, lt.size(sample)+1):
+        table.add_row([lt.getElement(sample, i)['datetime'][:10],
+                      lt.getElement(sample, i)['datetime'][11:],
+                      lt.getElement(sample, i)['city'].title(),
+                      lt.getElement(sample, i)['country'].title(),
                       lt.getElement(sample, i)['duration (seconds)'],
                       lt.getElement(sample, i)['shape'],
-                      round(float(lt.getElement(sample, i)['longitude']), 2),
-                      round(float(lt.getElement(sample, i)['latitude']), 2)])
+                      float(lt.getElement(sample, i)['longitude']),
+                      float(lt.getElement(sample, i)['latitude'])])
     print(table)
 
 

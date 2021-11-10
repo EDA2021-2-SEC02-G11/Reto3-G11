@@ -29,7 +29,6 @@ from datetime import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import mergesort as mer
 assert cf
 
 
@@ -205,7 +204,7 @@ def requirement2(catalog, sec_min, sec_max):
     """ Este ciclo añade los tres últimos avistamientos. Nótese que, al igual
     que el ciclo anterior, corre máximo tres veces."""
     i2 = lt.size(range_duration)
-    while lt.size(sample) >= 3 and lt.size(sample) < 6 and i2 >= 1:
+    while lt.size(sample) >= 3 and lt.size(sample) < 6 and i2 >= i1:
         zz_tree = lt.getElement(range_duration, i2)
         values_zz_tree = om.valueSet(zz_tree)
         i2 -= 1
@@ -327,51 +326,89 @@ def requirement4(catalog, fechaMin, fechaMax):
 # Requirement 5
 
 
-def create_tree_req5(tree, sighting):
+def create_tree_req5(tree_req5, sighting):
     """
     Crea el árbol del requisito 5.
     El árbol tiene como llaves la coordenada longitud (aproximada a dos cifras
-    decimales) y como valores arreglos con los avistamientos que tienen
-    dicha longitud. Los avistamientos al interior de cada arreglo están
-    ordenados por la coordenada latitud (aproximada a dos cifras decimales).
+    decimales) y como valores árboles. Cada árbol tiene como llaves
+    coordenadas de latitud (aproximadas a dos cifras decimales) y como valores
+    arreglos con todos los avistamientos que tomaron lugar en la longitud y
+    latitud dada.
+    Nótese que en los datos ocurre que ocurrieron en exactamente la misma
+    latitud y longitud.
     """
-    longitud = round(float(sighting["longitude"]), 2)
-    entry = om.get(tree, longitud)
+    entry = om.get(tree_req5, rf(sighting['longitude']))
     if entry is None:
-        sightings_list = lt.newList('ARRAY_LIST')
+        lat_tree = om.newMap(omaptype='RBT', comparefunction=compare_keys)
+        sightings_list = lt.newList(datastructure='ARRAY_LIST')
+        lt.addLast(sightings_list, sighting)
+        om.put(lat_tree, rf(sighting['latitude']), sightings_list)
+        om.put(tree_req5, rf(sighting['longitude']), lat_tree)
     else:
-        sightings_list = me.getValue(entry)
-    lt.addLast(sightings_list, sighting)
-    om.put(tree, longitud, sightings_list)
-    return tree
+        lat_tree = me.getValue(entry)
+        lat_tree_entry = om.get(lat_tree, rf(sighting['latitude']))
+        if lat_tree_entry is None:
+            sightings_list = lt.newList(datastructure='ARRAY_LIST')
+            lt.addLast(sightings_list, sighting)
+            om.put(lat_tree, rf(sighting['latitude']), sightings_list)
+        else:
+            lt.addLast(me.getValue(lat_tree_entry), sighting)
+    return tree_req5
 
 
-def order(catalog):
-    tree_req5 = catalog['req5']
-    key_list = om.keySet(tree_req5)
-    for key in lt.iterator(key_list):
-        entry = om.get(tree_req5, key)
-        sightings_list = me.getValue(entry)
-        sorted_list = mer.sort(sightings_list, compare_latitude)
-        om.put(tree_req5, key, sorted_list)
+def rf(coordinate):
+    return round(float(coordinate), 2)
 
 
 def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
+    """
+    Arma la respuesta del requisito 5 usando el árbol del requisito 5.
+    """
     tree_req5 = catalog['req5']
-    value_list = om.values(tree_req5, lon_min, lon_max)
-    n_values = lt.size(value_list)
     sample = lt.newList(datastructure='ARRAY_LIST')
-    # for i in range(1, n_values+1):
-    #     sightings_list = lt.getElement(value_list, i)
-    #     if i in list(range(1, 6)):
-    #         if lt.size(sample) < 10:
-    #             sighting =
-    #             lt.addLast(sample, sighting)
-    #     elif i in list(range(n_values-4, n_values+1)):
-    #         if lt.size(sample) < 10:
-    sample = value_list
-    n_sightings = n_values
-    return sample, n_sightings
+    n_range = 0
+    range_lon = om.values(tree_req5, lon_min, lon_max)
+
+    """ Este ciclo añade los cinco primeros avistamientos. Nótese que el ciclo
+    corre como máximo cinco veces."""
+    i1 = 1
+    while lt.size(sample) < 5 and i1 <= lt.size(range_lon):
+        lat_tree = lt.getElement(range_lon, i1)
+        values_lat_tree = om.values(lat_tree, lat_min, lat_max)
+        i1 += 1
+        j1 = 1
+        while lt.size(sample) < 5 and j1 <= lt.size(values_lat_tree):
+            sightings_list = lt.getElement(values_lat_tree, j1)
+            j1 += 1
+            k1 = 1
+            while lt.size(sample) < 5 and k1 <= lt.size(sightings_list):
+                sighting = lt.getElement(sightings_list, k1)
+                lt.addLast(sample, sighting)
+                k1 += 1
+
+    """ Este ciclo añade los cinco últimos avistamientos. Nótese que, al igual
+    que el ciclo anterior, corre máximo cinco veces."""
+    i2 = lt.size(range_lon)
+    while lt.size(sample) >= 5 and lt.size(sample) < 10 and i2 >= i1:
+        lat_tree = lt.getElement(range_lon, i2)
+        values_lat_tree = om.values(lat_tree, lat_min, lat_max)
+        i2 -= 1
+        j2 = lt.size(values_lat_tree)
+        while lt.size(sample) >= 5 and lt.size(sample) < 10 and j2 >= 1:
+            sightings_list = lt.getElement(values_lat_tree, j2)
+            j2 -= 1
+            k2 = lt.size(sightings_list)
+            while lt.size(sample) >= 5 and lt.size(sample) < 10 and k2 >= 1:
+                sighting = lt.getElement(sightings_list, k2)
+                lt.addLast(sample, sighting)
+                k2 -= 1
+
+    """ Este último ciclo cuenta el número de avistamientos en el rango. El
+    número de veces que corre depende del rango dado."""
+    for lat_tree in lt.iterator(range_lon):
+        for s_list in lt.iterator(om.values(lat_tree, lat_min, lat_max)):
+            n_range += lt.size(s_list)
+    return sample, n_range
 
 
 # Requirement 6
