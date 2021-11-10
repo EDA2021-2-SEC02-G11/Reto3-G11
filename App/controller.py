@@ -58,5 +58,5 @@ def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
     return model.requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
 
 
-def requirement6():
-    return model.requirement6()
+def requirement6(catalog, lon_min, lon_max, lat_min, lat_max):
+    return model.requirement6(catalog, lon_min, lon_max, lat_min, lat_max)

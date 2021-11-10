@@ -105,7 +105,7 @@ def print_req1(catalog):
           'the city of '+city+' in chronological order:')
     table = PrettyTable(['Date', 'Time', 'City', 'Country',
                          'Duration (s)', 'Shape'])
-    for i in 1, 2, 3, 6, 5, 4:
+    for i in 1, 2, 3, 4, 5, 6:
         table.add_row([lt.getElement(sample, i)['datetime'][:10],
                       lt.getElement(sample, i)['datetime'][11:],
                       lt.getElement(sample, i)['city'].title(),
@@ -246,7 +246,30 @@ def print_req5(catalog):
 
 
 def print_req6(catalog):
-    print('Este requerimiento aún no ha sido implementado.')
+    lon_max = float(input('Ingrese un límite superior de longitud: '))
+    lon_min = float(input('Ingrese un límite inferior de longitud: '))
+    lat_min = float(input('Ingrese un límite inferior de latitud: '))
+    lat_max = float(input('Ingrese un límite superior de latitud: '))
+    r6 = controller.requirement6(catalog, lon_min, lon_max, lat_min, lat_max)
+    n_range, sample, guardo = r6
+    lon_max = str(round(lon_max, 2))
+    lon_min = str(round(lon_min, 2))
+    lat_min = str(round(lat_min, 2))
+    lat_max = str(round(lat_max, 2))
+    print('\n--------------------Requirement 6: Inputs--------------------\n')
+    print('UFO sightings that occured within longitude range of ['+lon_min +
+          ', '+lon_max+'] and latitude range of ['+lat_min+', '+lat_max +
+          '].\n')
+    print('\n--------------------Requirement 6: Answer--------------------\n')
+    if guardo is True:
+        print("""File "requerimiento6.html" was created and saved """ +
+              'in directory Reto3-G11. The file shows a map with the ' +
+              'location of the '+str(n_range)+' UFO sightings that ocurred ' +
+              'within the longitude range ['+lon_min+', '+lon_max+'] and ' +
+              'the latitude range ['+lat_min+', '+lat_max+'].\n' +
+              'The file must be opened in a web browser.')
+    else:
+        print('Error.')
 
 
 """

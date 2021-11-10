@@ -25,6 +25,7 @@
  """
 
 import config as cf
+import folium as fo
 from datetime import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
@@ -418,8 +419,43 @@ def create_tree_req6(tree, sighting):
     pass
 
 
-def requirement6():
-    pass
+def requirement6(catalog, lon_min, lon_max, lat_min, lat_max):
+    sample, n_range = requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
+    origen = round((lat_max+lat_min)/2), round((lon_max+lon_min)/2)
+    mapa = fo.Map(location=origen, tiles='Stamen Toner', zoom_start=7)
+    fo.Rectangle(bounds=[[lat_min, lon_min], [lat_max, lon_max]],
+                 color='green', fill=True, fill_color='green',
+                 fill_opacity=0.1).add_to(mapa)
+    for i in range(1, lt.size(sample)+1):
+        lat = float(lt.getElement(sample, i)['latitude'])
+        lon = float(lt.getElement(sample, i)['longitude'])
+        h1 = str(lt.getElement(sample, i)['datetime'][:10])
+        h2 = str(lt.getElement(sample, i)['datetime'][11:])
+        h3 = str(lt.getElement(sample, i)['city'].title())
+        h4 = str(lt.getElement(sample, i)['country'].title())
+        h5 = str(lt.getElement(sample, i)['duration (seconds)'])
+        h6 = str(lt.getElement(sample, i)['shape'])
+        h7 = str(float(lt.getElement(sample, i)['latitude']))
+        h8 = str(float(lt.getElement(sample, i)['longitude']))
+        html_table = ('<b>Date: </b>'+h1 +
+                      '<br><b>Time: </b>'+h2 +
+                      '<br><b>City: </b>'+h3 +
+                      '<br><b>Country: </b>'+h4 +
+                      '<br><b>Duration: </b>'+h5+' s' +
+                      '<br><b>Shape: </b>'+h6 +
+                      '<br><b>Latitude: </b>'+h7 +
+                      '<br><b>Longitude: </b>'+h8)
+        if i == 1:
+            muestre = True
+        else:
+            muestre = False
+        popup_ = fo.Popup(html=html_table, min_width=150, max_width=200,
+                          show=muestre)
+        fo.Marker(location=[lat, lon], popup=popup_,
+                  icon=fo.Icon(color="red", icon="cloud")).add_to(mapa)
+    mapa.save("requerimiento6.html")
+    guardo = True
+    return n_range, sample, guardo
 
 
 # Comparing functions
