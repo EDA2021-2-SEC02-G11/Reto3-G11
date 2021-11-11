@@ -103,15 +103,15 @@ def print_req1(catalog):
           ' UFO sightings.')
     print('Information regarding the first and last three UFO sightings in ' +
           'the city of '+city+' in chronological order:')
-    table = PrettyTable(['Date', 'Time', 'City', 'Country',
-                         'Duration (s)', 'Shape'])
+    table = PrettyTable(['Datetime','city', 'State', 'Country',
+                        'Shape','Duration (seconds)'])
     for i in 1, 2, 3, 4, 5, 6:
-        table.add_row([lt.getElement(sample, i)['datetime'][:10],
-                      lt.getElement(sample, i)['datetime'][11:],
+        table.add_row([lt.getElement(sample, i)['datetime'],
                       lt.getElement(sample, i)['city'].title(),
+                      lt.getElement(sample, i)['state'].title(),
                       lt.getElement(sample, i)['country'].title(),
-                      lt.getElement(sample, i)['duration (seconds)'],
-                      lt.getElement(sample, i)['shape']])
+                      lt.getElement(sample, i)['shape'],
+                      lt.getElement(sample, i)['duration (seconds)']])
     print(table)
 
 
@@ -128,22 +128,22 @@ def print_req2(catalog):
           'sightings in total.\n')
     print('The longest UFO sightings recorded are:')
     table1 = PrettyTable(['Duration (s)', 'Amount of sightings'])
-    table1.add_row([str(top_duration), str(count_top)])
+    table1.add_row([str(int(top_duration)), str(count_top)])
     print(table1)
     print('\nThere are '+str(nrange)+' UFO sightings ' +
           'with duration bewteen '+str(sec_min)+' s '+'and ' +
           str(sec_max)+' s.')
     print('\nInformation regarding the first and last three of said UFO ' +
           'sightings, ordered by length:')
-    table = PrettyTable(['Date', 'Time', 'City', 'Country',
-                         'Duration (s)', 'Shape'])
+    table = PrettyTable(['Datetime', 'City','State', 'Country',
+                         'Shape','Duration (s)'])
     for i in 1, 2, 3, 6, 5, 4:
-        table.add_row([lt.getElement(sample, i)['datetime'][:10],
-                      lt.getElement(sample, i)['datetime'][11:],
+        table.add_row([lt.getElement(sample, i)['datetime'],
                       lt.getElement(sample, i)['city'].title(),
+                      lt.getElement(sample, i)['state'].title(),
                       lt.getElement(sample, i)['country'].title(),
-                      lt.getElement(sample, i)['duration (seconds)'],
-                      lt.getElement(sample, i)['shape']])
+                      lt.getElement(sample, i)['shape'],
+                      lt.getElement(sample, i)['duration (seconds)']])
     print(table)
 
 
