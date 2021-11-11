@@ -32,7 +32,7 @@ def init_catalog():
 
 
 def load_data(catalog):
-    file = cf.data_dir + 'UFOS/UFOS-utf8-large.csv'
+    file = cf.data_dir + 'UFOS/UFOS-utf8-small.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for sighting in input_file:
         model.add_sighting(catalog, sighting)

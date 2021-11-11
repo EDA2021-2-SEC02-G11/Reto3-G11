@@ -123,11 +123,11 @@ def requirement1(catalog, city):
     print(lt.size(valores))
     print(lt.iterator(valores))
     pos=1
-    while pos<=lt.size(valores):
-        num=lt.getElement(valores,pos)["root"]["size"]
-        if num>n_most_city:
+    for i in lt.iterator(valores):
+        size=i["root"]["size"]
+        if size>n_most_city:
             most_city=lt.getElement(ciudades,pos)
-            n_most_city=num
+            n_most_city=size
         pos+=1
     return total_cities, total, sample, most_city, n_most_city
 
@@ -428,6 +428,7 @@ def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
 
 def requirement6(catalog, lon_min, lon_max, lat_min, lat_max):
     sample, n_range = requirement5(catalog, lon_min, lon_max, lat_min, lat_max)
+    print(sample)
     origen = round((lat_max+lat_min)/2), round((lon_max+lon_min)/2)
     mapa = fo.Map(location=origen, tiles='Stamen Toner', zoom_start=7)
     fo.Rectangle(bounds=[[lat_min, lon_min], [lat_max, lon_max]],
