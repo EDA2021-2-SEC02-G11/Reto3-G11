@@ -117,7 +117,18 @@ def requirement1(catalog, city):
         sighting = me.getValue(entry_sighting)
         lt.addLast(sample, sighting)
     most_city = "ciudad"
-    n_most_city = 666
+    n_most_city = 0
+    valores=om.valueSet(tree_req1)
+    ciudades=om.keySet(tree_req1)
+    print(lt.size(valores))
+    print(lt.iterator(valores))
+    pos=1
+    while pos<=lt.size(valores):
+        num=lt.getElement(valores,pos)["root"]["size"]
+        if num>n_most_city:
+            most_city=lt.getElement(ciudades,pos)
+            n_most_city=num
+        pos+=1
     return total_cities, total, sample, most_city, n_most_city
 
 
