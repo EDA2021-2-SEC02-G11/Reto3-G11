@@ -24,7 +24,7 @@
  * Dario Correal - Version inicial
  """
 
-import config as cf 
+import config as cf
 import folium as fo
 from datetime import datetime
 from DISClib.ADT import list as lt
@@ -413,11 +413,6 @@ def requirement5(catalog, lon_min, lon_max, lat_min, lat_max):
 
 
 # Requirement 6
-
-
-def create_tree_req6(tree, sighting):
-    
-    pass
 
 
 def requirement6(catalog, lon_min, lon_max, lat_min, lat_max):
